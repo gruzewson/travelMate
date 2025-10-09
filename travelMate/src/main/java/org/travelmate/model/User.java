@@ -1,12 +1,14 @@
 package org.travelmate.model;
 
-import lombok.Data;
+import lombok.*;
 import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     private String login;
     @ToString.Exclude

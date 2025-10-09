@@ -1,19 +1,21 @@
 package org.travelmate.model;
 
-import lombok.Data;
+import lombok.*;
 import org.travelmate.model.enums.TripStatus;
-
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Trip {
-    private Long id;
+    private UUID id;
     private String title;
     private LocalDate startDate;
     private LocalDate endDate;
     private double estimatedCost;
-
     private TripStatus status;
+
     private DestinationCategory category;
     private User user;
 
