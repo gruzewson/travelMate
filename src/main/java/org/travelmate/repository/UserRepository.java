@@ -2,11 +2,19 @@ package org.travelmate.repository;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import org.travelmate.model.User;
+
+import java.time.LocalDate;
 import java.util.*;
 
 @ApplicationScoped
 public class UserRepository implements Repository<User, UUID> {
     private final Map<UUID, User> users = new HashMap<>();
+
+    public UserRepository() {
+        UUID id = UUID.randomUUID();
+        User sample = new User(id, "john_doe", "password123", LocalDate.of(1990, 5, 15), null);
+        users.put(id, sample);
+    }
 
     @Override
     public Optional<User> find(UUID id) {

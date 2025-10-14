@@ -1,0 +1,6 @@
+###
+# Pobiera listę wszystkich użytkowników.
+# Po wykonaniu tego żądania, skopiuj ID jednego z użytkowników
+# i wklej je w żądaniu poniżej.
+GET http://localhost:9080/api/users
+Accept: application/json
