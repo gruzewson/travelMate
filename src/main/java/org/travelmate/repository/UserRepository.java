@@ -10,10 +10,23 @@ import java.util.*;
 public class UserRepository implements Repository<User, UUID> {
     private final Map<UUID, User> users = new HashMap<>();
 
-    public UserRepository() {
+    private void fillWithSampleData() {
         UUID id = UUID.randomUUID();
-        User sample = new User(id, "john_doe", "password123", LocalDate.of(1990, 5, 15), null);
+        User sample = new User(id, "john_doe", LocalDate.of(1990, 5, 15), null);
         users.put(id, sample);
+        id = UUID.randomUUID();
+        sample = new User(id, "andrew", LocalDate.of(2000, 6, 16), null);
+        users.put(id, sample);
+        id = UUID.randomUUID();
+        sample = new User(id, "mariusz", LocalDate.of(2010, 7, 17), null);
+        users.put(id, sample);
+        id = UUID.randomUUID();
+        sample = new User(id, "marcin", LocalDate.of(2020, 8, 18), null);
+        users.put(id, sample);
+    }
+
+    public UserRepository() {
+        fillWithSampleData();
     }
 
     @Override

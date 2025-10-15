@@ -1,6 +1,35 @@
 ###
-# Pobiera listę wszystkich użytkowników.
-# Po wykonaniu tego żądania, skopiuj ID jednego z użytkowników
-# i wklej je w żądaniu poniżej.
+# Gets all users.
 GET http://localhost:9080/api/users
+Accept: application/json
+
+###
+@userId = 8d52cdcb-6bf5-47b4-9d0a-d7eb05a64bd9
+# Gets a user by their ID.
+GET http://localhost:9080/api/users/{{userId}}
+Accept: application/json
+
+###
+# Creates a new user.
+PUT http://localhost:9080/api/users
+Content-Type: application/json
+
+{
+  "login": "Jan Kowalski",
+  "dateOfBirth": "1990-05-15"
+}
+
+###
+# Updates an existing user.
+PUT http://localhost:9080/api/users/{{userId}}
+Content-Type: application/json
+
+{
+  "login": "andrew",
+  "dateOfBirth": "1985-10-30"
+}
+
+###
+# Deletes a user by their ID.
+DELETE http://localhost:9080/api/users/{{userId}}
 Accept: application/json
