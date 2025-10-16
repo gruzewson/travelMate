@@ -4,7 +4,7 @@ import org.travelmate.model.User;
 import java.time.LocalDate;
 import java.util.*;
 
-public class UserRepository implements Repository<User, UUID> {
+public class UserRepository {
     private final Map<UUID, User> users = new HashMap<>();
 
     private void fillWithSampleData() {
@@ -25,32 +25,23 @@ public class UserRepository implements Repository<User, UUID> {
         fillWithSampleData();
     }
 
-    @Override
     public Optional<User> find(UUID id) {
         return Optional.ofNullable(users.get(id));
     }
 
-    @Override
     public List<User> findAll() {
         return new ArrayList<>(users.values());
     }
 
-    @Override
     public void create(User entity) {
         users.put(entity.getId(), entity);
     }
 
-    @Override
     public void delete(User entity) {
         users.remove(entity.getId());
     }
 
-    @Override
     public void update(User entity) {
         users.put(entity.getId(), entity);
-    }
-
-    public boolean existsById(UUID id) {
-        return users.containsKey(id);
     }
 }

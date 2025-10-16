@@ -3,7 +3,9 @@ package org.travelmate.service;
 import org.travelmate.repository.AvatarRepository;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.*;
+import java.util.Optional;
 
 public class AvatarService {
 
@@ -13,7 +15,7 @@ public class AvatarService {
         this.avatarRepository = avatarRepository;
     }
 
-    public Path getAvatar(String filename) throws IOException {
+    public Optional<Path> getAvatar(String filename) {
         return avatarRepository.findAvatar(filename);
     }
 
@@ -21,7 +23,7 @@ public class AvatarService {
         avatarRepository.deleteAvatar(filename);
     }
 
-    public void uploadAvatar(String filename, java.io.InputStream data) throws IOException {
+    public void uploadAvatar(String filename, InputStream data) throws IOException {
         avatarRepository.uploadAvatar(filename, data);
     }
 }

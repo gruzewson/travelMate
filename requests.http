@@ -3,7 +3,7 @@
 GET http://localhost:9080/api/users
 
 ### Gets a user by their ID
-GET http://localhost:9080/api/users/userId
+GET http://localhost:9080/api/users/a252f148-2664-4ed1-b195-d44b0bb6d886
 
 ### Create a new user
 PUT http://localhost:9080/api/users
@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### Update a user
-PUT http://localhost:9080/api/users/userId
+PUT http://localhost:9080/api/users/a252f148-2664-4ed1-b195-d44b0bb6d886
 Content-Type: application/json
 
 {
@@ -24,18 +24,18 @@ Content-Type: application/json
 }
 
 ### Deletes a user
-DELETE http://localhost:9080/api/users/userId
+DELETE http://localhost:9080/api/users/a252f148-2664-4ed1-b195-d44b0bb6d886
 
 ### Get avatar
-GET http://localhost:9080/api/avatars/b94c2212-f65f-4025-a80a-d4b199ed758c.png
+GET http://localhost:9080/api/avatars/a252f148-2664-4ed1-b195-d44b0bb6d886.png
 
 ### Delete avatar
-DELETE http://localhost:9080/api/avatars/b94c2212-f65f-4025-a80a-d4b199ed758c.png
+DELETE http://localhost:9080/api/avatars/a252f148-2664-4ed1-b195-d44b0bb6d886.png
 
 ### Upload/Update avatar
 # in request body provide new name of the image
 # image to upload should be in ./resources/avatars directory
-PUT http://localhost:9080/api/avatars/b94c2212-f65f-4025-a80a-d4b199ed758c.png
+PUT http://localhost:9080/api/avatars/a252f148-2664-4ed1-b195-d44b0bb6d886.png
 Content-Type: image/png
 
-< ./resources/avatars/avatar3.png
+< ./resources/avatars/avatar5.png

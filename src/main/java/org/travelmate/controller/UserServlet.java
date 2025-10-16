@@ -6,19 +6,22 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.travelmate.model.User;
 import org.travelmate.repository.UserRepository;
 import org.travelmate.service.UserService;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 @WebServlet("/api/users/*")
 public class UserServlet extends HttpServlet {
 
-    private final UserService userService;
+    private UserService userService;
     private final Jsonb jsonb = JsonbBuilder.create();
 
-    public UserServlet() {
+    @Override
+    public void init() {
         this.userService = new UserService(new UserRepository());
     }
 
@@ -58,16 +61,45 @@ public class UserServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        var user = jsonb.fromJson(req.getReader(), org.travelmate.model.User.class);
-        if(user.getId() == null){
+        User user;
+        try {
+            user = jsonb.fromJson(req.getReader(), User.class);
+        } catch (Exception e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("Invalid JSON");
+            return;
+        }
+
+        String pathInfo = req.getPathInfo();
+
+        if (pathInfo == null || pathInfo.equals("/")) {
+            // create new user
             user.setId(UUID.randomUUID());
             userService.create(user);
+
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+            resp.getWriter().write(jsonb.toJson(user));
+
+        } else {
+            // update existing user
+            try {
+                UUID userIdFromPath = UUID.fromString(pathInfo.substring(1));
+
+                if (userService.find(userIdFromPath).isPresent()) {
+                    user.setId(userIdFromPath);
+                    userService.update(user);
+
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    resp.getWriter().write(jsonb.toJson(user));
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    resp.getWriter().write("User not found");
+                }
+            } catch (IllegalArgumentException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("Invalid user ID format");
+            }
         }
-        else {
-            userService.update(user);
-        }
-        String jsonUser = jsonb.toJson(user);
-        resp.getWriter().write(jsonUser);
     }
 
     @Override

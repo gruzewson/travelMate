@@ -8,6 +8,7 @@ import org.travelmate.service.AvatarService;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.Optional;
 
 @WebServlet("/api/avatars/*")
 public class AvatarServlet extends HttpServlet {
@@ -15,7 +16,7 @@ public class AvatarServlet extends HttpServlet {
     private AvatarService avatarService;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         String avatarDir = getServletContext().getInitParameter("avatars.dir");
         avatarService = new AvatarService(new AvatarRepository(avatarDir));
     }
@@ -29,19 +30,18 @@ public class AvatarServlet extends HttpServlet {
             return;
         }
 
-        String filename = pathInfo.substring(1); // remove leading "/"
-        Path avatarPath = avatarService.getAvatar(filename);
+        String filename = pathInfo.substring(1);
+        Optional<Path> avatarPath = avatarService.getAvatar(filename);
 
-        if (avatarPath == null) {
+        if (avatarPath.isEmpty()) {
             res.sendError(HttpServletResponse.SC_NOT_FOUND, "Avatar not found");
             return;
         }
 
-        // Set response headers
-        res.setContentType(Files.probeContentType(avatarPath));
-        res.setContentLengthLong(Files.size(avatarPath));
+        res.setContentType("image/png");
+        res.setContentLengthLong(Files.size(avatarPath.get()));
 
-        try (InputStream in = Files.newInputStream(avatarPath);
+        try (InputStream in = Files.newInputStream(avatarPath.get());
              OutputStream out = res.getOutputStream()) {
             in.transferTo(out);
         }
@@ -55,7 +55,7 @@ public class AvatarServlet extends HttpServlet {
 
         try {
             avatarService.deleteAvatar(filename);
-            res.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            res.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException e) {
             res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error deleting avatar");
         }
