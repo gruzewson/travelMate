@@ -1,12 +1,12 @@
 package org.travelmate.controller;
 
-import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.travelmate.repository.UserRepository;
 import org.travelmate.service.UserService;
 
 import java.io.IOException;
@@ -15,10 +15,13 @@ import java.util.UUID;
 @WebServlet("/api/users/*")
 public class UserServlet extends HttpServlet {
 
-    @Inject
-    private UserService userService;
-
+    private final UserService userService;
     private final Jsonb jsonb = JsonbBuilder.create();
+
+    public UserServlet() {
+        this.userService = new UserService(new UserRepository());
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

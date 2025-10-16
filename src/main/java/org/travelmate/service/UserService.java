@@ -1,19 +1,18 @@
 package org.travelmate.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import org.travelmate.model.User;
 import org.travelmate.repository.UserRepository;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
 public class UserService {
 
-    @Inject
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public Optional<User> find(UUID id) {
         return userRepository.find(id);

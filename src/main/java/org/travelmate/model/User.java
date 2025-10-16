@@ -17,4 +17,10 @@ public class User {
 
     @ToString.Exclude
     private List<Trip> trips;
+
+    public User(String login, LocalDate dateOfBirth) {
+        this.id = UUID.randomUUID();
+        this.login = login;
+        this.dateOfBirth = dateOfBirth;
+    }
 }

@@ -1,28 +1,24 @@
 package org.travelmate.repository;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import org.travelmate.model.User;
-
 import java.time.LocalDate;
 import java.util.*;
 
-@ApplicationScoped
 public class UserRepository implements Repository<User, UUID> {
     private final Map<UUID, User> users = new HashMap<>();
 
     private void fillWithSampleData() {
-        UUID id = UUID.randomUUID();
-        User sample = new User(id, "john_doe", LocalDate.of(1990, 5, 15), null);
-        users.put(id, sample);
-        id = UUID.randomUUID();
-        sample = new User(id, "andrew", LocalDate.of(2000, 6, 16), null);
-        users.put(id, sample);
-        id = UUID.randomUUID();
-        sample = new User(id, "mariusz", LocalDate.of(2010, 7, 17), null);
-        users.put(id, sample);
-        id = UUID.randomUUID();
-        sample = new User(id, "marcin", LocalDate.of(2020, 8, 18), null);
-        users.put(id, sample);
+        User user1 = new User("john", LocalDate.of(1990, 5, 15));
+        users.put(user1.getId(), user1);
+
+        User user2 = new User("andrew", LocalDate.of(2000, 6, 16));
+        users.put(user2.getId(), user2);
+
+        User user3 = new User( "mariusz", LocalDate.of(2010, 7, 17));
+        users.put(user3.getId(), user3);
+
+        User user4 = new User("marcin", LocalDate.of(2020, 8, 18));
+        users.put(user4.getId(), user4);
     }
 
     public UserRepository() {
@@ -52,5 +48,9 @@ public class UserRepository implements Repository<User, UUID> {
     @Override
     public void update(User entity) {
         users.put(entity.getId(), entity);
+    }
+
+    public boolean existsById(UUID id) {
+        return users.containsKey(id);
     }
 }
