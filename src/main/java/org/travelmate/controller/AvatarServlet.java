@@ -1,5 +1,7 @@
 package org.travelmate.controller;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -13,13 +15,8 @@ import java.util.Optional;
 @WebServlet("/api/avatars/*")
 public class AvatarServlet extends HttpServlet {
 
+    @Inject
     private AvatarService avatarService;
-
-    @Override
-    public void init() {
-        String avatarDir = getServletContext().getInitParameter("avatars.dir");
-        avatarService = new AvatarService(new AvatarRepository(avatarDir));
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
@@ -30,7 +27,7 @@ public class AvatarServlet extends HttpServlet {
             return;
         }
 
-        String filename = pathInfo.substring(1);
+        String filename = pathInfo.substring(1) + ".png";
         Optional<Path> avatarPath = avatarService.getAvatar(filename);
 
         if (avatarPath.isEmpty()) {
@@ -51,7 +48,7 @@ public class AvatarServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String pathInfo = req.getPathInfo();
 
-        String filename = pathInfo.substring(1);
+        String filename = pathInfo.substring(1) + ".png";
 
         try {
             avatarService.deleteAvatar(filename);
@@ -70,7 +67,7 @@ public class AvatarServlet extends HttpServlet {
             return;
         }
 
-        String filename = pathInfo.substring(1);
+        String filename = pathInfo.substring(1) + ".png";
 
         try (InputStream in = req.getInputStream()) {
             avatarService.uploadAvatar(filename, in);

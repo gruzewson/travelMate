@@ -1,0 +1,33 @@
+
+### Get all trips
+GET http://localhost:9080/api/trips
+
+### Gets a trip by their ID
+GET http://localhost:9080/api/trips/4e6b5eae-b055-471a-b9eb-0cd0930772e0
+
+### Create a new trip
+PUT http://localhost:9080/api/trips
+Content-Type: application/json
+
+{
+  "title": "Family Vacation",
+  "startDate": "2025-06-01",
+  "endDate": "2025-06-14",
+  "estimatedCost": 2500.0,
+  "status": "PLANNED"
+}
+
+### Update a trip
+PUT http://localhost:9080/api/trips/4e6b5eae-b055-471a-b9eb-0cd0930772e0
+Content-Type: application/json
+
+{
+  "title": "Friends",
+  "startDate": "2024-06-01",
+  "endDate": "2024-06-14",
+  "estimatedCost": 600.0,
+  "status": "COMPLETED"
+}
+
+### Deletes a trip
+DELETE http://localhost:9080/api/trips/4e6b5eae-b055-471a-b9eb-0cd0930772e0

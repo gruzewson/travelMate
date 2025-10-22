@@ -1,16 +1,39 @@
 package org.travelmate.repository;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletContext;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
 import java.util.Optional;
 
+@ApplicationScoped
 public class AvatarRepository {
 
-    private final Path avatarsDir;
+    @Inject
+    private ServletContext context;
 
-    public AvatarRepository(String avatarsDir) {
-        this.avatarsDir = Paths.get(avatarsDir);
+    private Path avatarsDir;
+
+    @PostConstruct
+    public void initialize() {
+        String avatarsDirParam = context.getInitParameter("avatars.dir");
+        if (avatarsDirParam == null) {
+            throw new IllegalStateException("avatars.dir context parameter is not set in web.xml");
+        }
+
+        this.avatarsDir = Paths.get(avatarsDirParam);
+
+        if (Files.notExists(this.avatarsDir)) {
+            try {
+                Files.createDirectories(this.avatarsDir);
+            } catch (IOException e) {
+                throw new RuntimeException("Cannot create avatars directory", e);
+            }
+        }
     }
 
     public Optional<Path> findAvatar(String filename) {

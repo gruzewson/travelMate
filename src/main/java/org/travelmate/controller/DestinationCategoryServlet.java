@@ -1,6 +1,5 @@
 package org.travelmate.controller;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -8,19 +7,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.travelmate.model.User;
-import org.travelmate.repository.UserRepository;
-import org.travelmate.service.UserService;
+import org.travelmate.model.DestinationCategory;
+import org.travelmate.service.DestinationCategoryService;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
-@WebServlet("/api/users/*")
-public class UserServlet extends HttpServlet {
+@WebServlet("/api/categories/*")
+public class DestinationCategoryServlet extends HttpServlet {
 
     @Inject
-    private UserService userService;
+    private DestinationCategoryService categoryService;
     private final Jsonb jsonb = JsonbBuilder.create();
 
 
@@ -32,20 +29,20 @@ public class UserServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            String jsonUsers = jsonb.toJson(userService.findAll());
-            resp.getWriter().write(jsonUsers);
+            String jsonCategories = jsonb.toJson(categoryService.findAll());
+            resp.getWriter().write(jsonCategories);
         }
         else{
             try{
                 String idStr = pathInfo.substring(1);
-                UUID userId = java.util.UUID.fromString(idStr);
-                var userOpt = userService.find(userId);
-                if(userOpt.isPresent()){
-                    String jsonUser = jsonb.toJson(userOpt.get());
-                    resp.getWriter().write(jsonUser);
+                UUID categoryId = java.util.UUID.fromString(idStr);
+                var categoryOpt = categoryService.find(categoryId);
+                if(categoryOpt.isPresent()){
+                    String jsonCategories = jsonb.toJson(categoryOpt.get());
+                    resp.getWriter().write(jsonCategories);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("User not found");
+                    resp.getWriter().write("category not found");
                 }
             } catch (IllegalArgumentException e){
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -59,9 +56,9 @@ public class UserServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        User user;
+        DestinationCategory category;
         try {
-            user = jsonb.fromJson(req.getReader(), User.class);
+            category = jsonb.fromJson(req.getReader(), DestinationCategory.class);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("Invalid JSON");
@@ -71,31 +68,31 @@ public class UserServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            // create new user
-            user.setId(UUID.randomUUID());
-            userService.create(user);
+            // create new category
+            category.setId(UUID.randomUUID());
+            categoryService.create(category);
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.getWriter().write(jsonb.toJson(user));
+            resp.getWriter().write(jsonb.toJson(category));
 
         } else {
-            // update existing user
+            // update existing category
             try {
-                UUID userIdFromPath = UUID.fromString(pathInfo.substring(1));
+                UUID categoryIdFromPath = UUID.fromString(pathInfo.substring(1));
 
-                if (userService.find(userIdFromPath).isPresent()) {
-                    user.setId(userIdFromPath);
-                    userService.update(user);
+                if (categoryService.find(categoryIdFromPath).isPresent()) {
+                    category.setId(categoryIdFromPath);
+                    categoryService.update(category);
 
                     resp.setStatus(HttpServletResponse.SC_OK);
-                    resp.getWriter().write(jsonb.toJson(user));
+                    resp.getWriter().write(jsonb.toJson(category));
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("User not found");
+                    resp.getWriter().write("category not found");
                 }
             } catch (IllegalArgumentException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().write("Invalid user ID format");
+                resp.getWriter().write("Invalid category ID format");
             }
         }
     }
@@ -106,24 +103,25 @@ public class UserServlet extends HttpServlet {
 
         if (pathInfo == null || pathInfo.equals("/")) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write("User ID must be provided in the URL path.");
+            resp.getWriter().write("category ID must be provided in the URL path.");
             return;
         }
 
         try {
-            UUID userId = UUID.fromString(pathInfo.substring(1));
+            UUID categoryId = UUID.fromString(pathInfo.substring(1));
 
-            var userOpt = userService.find(userId);
-            if(userOpt.isPresent()){
-                String jsonUser = jsonb.toJson(userOpt.get());
-                resp.getWriter().write(jsonUser);
-                userService.delete(userOpt.get());
+            var categoryOpt = categoryService.find(categoryId);
+            if(categoryOpt.isPresent()){
+                String jsonCategories = jsonb.toJson(categoryOpt.get());
+                resp.getWriter().write(jsonCategories);
+                categoryService.delete(categoryOpt.get());
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                resp.getWriter().write("User not found");
+                resp.getWriter().write("category not found");
             }
         } catch (IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }
+

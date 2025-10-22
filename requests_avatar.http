@@ -1,0 +1,13 @@
+### Get avatar
+GET http://localhost:9080/api/avatars/529a4a41-961c-4423-aeff-fec54171b638
+
+### Delete avatar
+DELETE http://localhost:9080/api/avatars/529a4a41-961c-4423-aeff-fec54171b638
+
+### Upload/Update avatar
+# in request body provide new name of the image
+# image to upload should be in ./resources/avatars directory
+PUT http://localhost:9080/api/avatars/529a4a41-961c-4423-aeff-fec54171b638
+Content-Type: image/png
+
+< ./resources/avatars/avatar5.png

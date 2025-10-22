@@ -1,0 +1,27 @@
+
+### Get all Categories
+GET http://localhost:9080/api/categories
+
+### Gets a category by its ID
+GET http://localhost:9080/api/categories/19cf86f3-9112-47f9-831a-20c81c0a3d6d
+
+### Create a new category
+PUT http://localhost:9080/api/categories
+Content-Type: application/json
+
+{
+  "name": "Family Vacation",
+  "description": "Two-week family trip to the coast."
+}
+
+### Update category
+PUT http://localhost:9080/api/categories/19cf86f3-9112-47f9-831a-20c81c0a3d6d
+Content-Type: application/json
+
+{
+  "name": "Friends",
+  "description": "Weekend getaway with friends."
+}
+
+### Deletes a category
+DELETE http://localhost:9080/api/categories/19cf86f3-9112-47f9-831a-20c81c0a3d6d

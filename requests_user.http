@@ -1,0 +1,27 @@
+
+### Get all users
+GET http://localhost:9080/api/users
+
+### Gets a user by their ID
+GET http://localhost:9080/api/users/61316773-9e3d-4588-ac4d-1a29d03983b8
+
+### Create a new user
+PUT http://localhost:9080/api/users
+Content-Type: application/json
+
+{
+  "login": "Jan Kowalski",
+  "dateOfBirth": "1990-05-15"
+}
+
+### Update a user
+PUT http://localhost:9080/api/users/529a4a41-961c-4423-aeff-fec54171b638
+Content-Type: application/json
+
+{
+  "login": "andy",
+  "dateOfBirth": "1985-10-30"
+}
+
+### Deletes a user
+DELETE http://localhost:9080/api/users/61316773-9e3d-4588-ac4d-1a29d03983b8

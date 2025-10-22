@@ -1,11 +1,14 @@
 package org.travelmate.repository;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import org.travelmate.model.User;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
+@ApplicationScoped
 public class UserRepository {
-    private final Map<UUID, User> users = new HashMap<>();
+    private final Map<UUID, User> users = new ConcurrentHashMap<>();
 
     private void fillWithSampleData() {
         User user1 = new User("john", LocalDate.of(1990, 5, 15));

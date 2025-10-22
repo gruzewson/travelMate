@@ -1,5 +1,7 @@
 package org.travelmate.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.travelmate.repository.AvatarRepository;
 
 import java.io.IOException;
@@ -7,13 +9,11 @@ import java.io.InputStream;
 import java.nio.file.*;
 import java.util.Optional;
 
+@ApplicationScoped
 public class AvatarService {
 
-    private final AvatarRepository avatarRepository;
-
-    public AvatarService(AvatarRepository avatarRepository) {
-        this.avatarRepository = avatarRepository;
-    }
+    @Inject
+    private AvatarRepository avatarRepository;
 
     public Optional<Path> getAvatar(String filename) {
         return avatarRepository.findAvatar(filename);

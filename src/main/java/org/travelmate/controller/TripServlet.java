@@ -1,6 +1,5 @@
 package org.travelmate.controller;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -8,19 +7,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.travelmate.model.User;
-import org.travelmate.repository.UserRepository;
-import org.travelmate.service.UserService;
+import org.travelmate.model.Trip;
+import org.travelmate.service.TripService;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
-@WebServlet("/api/users/*")
-public class UserServlet extends HttpServlet {
+@WebServlet("/api/trips/*")
+public class TripServlet extends HttpServlet {
 
     @Inject
-    private UserService userService;
+    private TripService tripService;
     private final Jsonb jsonb = JsonbBuilder.create();
 
 
@@ -32,20 +29,20 @@ public class UserServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            String jsonUsers = jsonb.toJson(userService.findAll());
-            resp.getWriter().write(jsonUsers);
+            String jsonTrips = jsonb.toJson(tripService.findAll());
+            resp.getWriter().write(jsonTrips);
         }
         else{
             try{
                 String idStr = pathInfo.substring(1);
-                UUID userId = java.util.UUID.fromString(idStr);
-                var userOpt = userService.find(userId);
-                if(userOpt.isPresent()){
-                    String jsonUser = jsonb.toJson(userOpt.get());
-                    resp.getWriter().write(jsonUser);
+                UUID tripId = java.util.UUID.fromString(idStr);
+                var tripOpt = tripService.find(tripId);
+                if(tripOpt.isPresent()){
+                    String jsonTrip = jsonb.toJson(tripOpt.get());
+                    resp.getWriter().write(jsonTrip);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("User not found");
+                    resp.getWriter().write("trip not found");
                 }
             } catch (IllegalArgumentException e){
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -59,9 +56,9 @@ public class UserServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        User user;
+        Trip trip;
         try {
-            user = jsonb.fromJson(req.getReader(), User.class);
+            trip = jsonb.fromJson(req.getReader(), Trip.class);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("Invalid JSON");
@@ -71,31 +68,31 @@ public class UserServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            // create new user
-            user.setId(UUID.randomUUID());
-            userService.create(user);
+            // create new trip
+            trip.setId(UUID.randomUUID());
+            tripService.create(trip);
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.getWriter().write(jsonb.toJson(user));
+            resp.getWriter().write(jsonb.toJson(trip));
 
         } else {
-            // update existing user
+            // update existing trip
             try {
-                UUID userIdFromPath = UUID.fromString(pathInfo.substring(1));
+                UUID tripIdFromPath = UUID.fromString(pathInfo.substring(1));
 
-                if (userService.find(userIdFromPath).isPresent()) {
-                    user.setId(userIdFromPath);
-                    userService.update(user);
+                if (tripService.find(tripIdFromPath).isPresent()) {
+                    trip.setId(tripIdFromPath);
+                    tripService.update(trip);
 
                     resp.setStatus(HttpServletResponse.SC_OK);
-                    resp.getWriter().write(jsonb.toJson(user));
+                    resp.getWriter().write(jsonb.toJson(trip));
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("User not found");
+                    resp.getWriter().write("trip not found");
                 }
             } catch (IllegalArgumentException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().write("Invalid user ID format");
+                resp.getWriter().write("Invalid trip ID format");
             }
         }
     }
@@ -106,21 +103,21 @@ public class UserServlet extends HttpServlet {
 
         if (pathInfo == null || pathInfo.equals("/")) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write("User ID must be provided in the URL path.");
+            resp.getWriter().write("trip ID must be provided in the URL path.");
             return;
         }
 
         try {
-            UUID userId = UUID.fromString(pathInfo.substring(1));
+            UUID tripId = UUID.fromString(pathInfo.substring(1));
 
-            var userOpt = userService.find(userId);
-            if(userOpt.isPresent()){
-                String jsonUser = jsonb.toJson(userOpt.get());
-                resp.getWriter().write(jsonUser);
-                userService.delete(userOpt.get());
+            var tripOpt = tripService.find(tripId);
+            if(tripOpt.isPresent()){
+                String jsonTrip = jsonb.toJson(tripOpt.get());
+                resp.getWriter().write(jsonTrip);
+                tripService.delete(tripOpt.get());
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                resp.getWriter().write("User not found");
+                resp.getWriter().write("trip not found");
             }
         } catch (IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
