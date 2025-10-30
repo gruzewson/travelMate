@@ -1,4 +1,4 @@
-package org.travelmate.controller;
+package org.travelmate.controller.servlet;
 
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
@@ -7,17 +7,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.travelmate.model.Trip;
-import org.travelmate.service.TripService;
+import org.travelmate.model.User;
+import org.travelmate.service.UserService;
 
 import java.io.IOException;
 import java.util.UUID;
 
-@WebServlet("/api/trips/*")
-public class TripServlet extends HttpServlet {
+@WebServlet("/api/users/*")
+public class UserServlet extends HttpServlet {
 
     @Inject
-    private TripService tripService;
+    private UserService userService;
     private final Jsonb jsonb = JsonbBuilder.create();
 
 
@@ -29,20 +29,20 @@ public class TripServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            String jsonTrips = jsonb.toJson(tripService.findAll());
-            resp.getWriter().write(jsonTrips);
+            String jsonUsers = jsonb.toJson(userService.findAll());
+            resp.getWriter().write(jsonUsers);
         }
         else{
             try{
                 String idStr = pathInfo.substring(1);
-                UUID tripId = java.util.UUID.fromString(idStr);
-                var tripOpt = tripService.find(tripId);
-                if(tripOpt.isPresent()){
-                    String jsonTrip = jsonb.toJson(tripOpt.get());
-                    resp.getWriter().write(jsonTrip);
+                UUID userId = java.util.UUID.fromString(idStr);
+                var userOpt = userService.find(userId);
+                if(userOpt.isPresent()){
+                    String jsonUser = jsonb.toJson(userOpt.get());
+                    resp.getWriter().write(jsonUser);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("trip not found");
+                    resp.getWriter().write("User not found");
                 }
             } catch (IllegalArgumentException e){
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -56,9 +56,9 @@ public class TripServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        Trip trip;
+        User user;
         try {
-            trip = jsonb.fromJson(req.getReader(), Trip.class);
+            user = jsonb.fromJson(req.getReader(), User.class);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("Invalid JSON");
@@ -68,31 +68,31 @@ public class TripServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            // create new trip
-            trip.setId(UUID.randomUUID());
-            tripService.create(trip);
+            // create new user
+            user.setId(UUID.randomUUID());
+            userService.create(user);
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.getWriter().write(jsonb.toJson(trip));
+            resp.getWriter().write(jsonb.toJson(user));
 
         } else {
-            // update existing trip
+            // update existing user
             try {
-                UUID tripIdFromPath = UUID.fromString(pathInfo.substring(1));
+                UUID userIdFromPath = UUID.fromString(pathInfo.substring(1));
 
-                if (tripService.find(tripIdFromPath).isPresent()) {
-                    trip.setId(tripIdFromPath);
-                    tripService.update(trip);
+                if (userService.find(userIdFromPath).isPresent()) {
+                    user.setId(userIdFromPath);
+                    userService.update(user);
 
                     resp.setStatus(HttpServletResponse.SC_OK);
-                    resp.getWriter().write(jsonb.toJson(trip));
+                    resp.getWriter().write(jsonb.toJson(user));
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("trip not found");
+                    resp.getWriter().write("User not found");
                 }
             } catch (IllegalArgumentException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().write("Invalid trip ID format");
+                resp.getWriter().write("Invalid user ID format");
             }
         }
     }
@@ -103,21 +103,21 @@ public class TripServlet extends HttpServlet {
 
         if (pathInfo == null || pathInfo.equals("/")) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write("trip ID must be provided in the URL path.");
+            resp.getWriter().write("User ID must be provided in the URL path.");
             return;
         }
 
         try {
-            UUID tripId = UUID.fromString(pathInfo.substring(1));
+            UUID userId = UUID.fromString(pathInfo.substring(1));
 
-            var tripOpt = tripService.find(tripId);
-            if(tripOpt.isPresent()){
-                String jsonTrip = jsonb.toJson(tripOpt.get());
-                resp.getWriter().write(jsonTrip);
-                tripService.delete(tripOpt.get());
+            var userOpt = userService.find(userId);
+            if(userOpt.isPresent()){
+                String jsonUser = jsonb.toJson(userOpt.get());
+                resp.getWriter().write(jsonUser);
+                userService.delete(userOpt.get());
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                resp.getWriter().write("trip not found");
+                resp.getWriter().write("User not found");
             }
         } catch (IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

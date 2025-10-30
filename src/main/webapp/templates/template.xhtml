@@ -12,96 +12,35 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>TravelMate - Trip Planner</title>
 
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-                min-height: 100vh;
-                background-color: #f9f9f9;
-            }
-            .header {
-                background-color: #003366;
-                color: white;
-                padding: 20px;
-                text-align: center;
-            }
-            .header h1 {
-                margin: 0;
-            }
-            /* Example placeholder for a "graphic" in the header */
-            .header-logo {
-                font-size: 2em;
-                font-weight: bold;
-                /* In a production solution:
-                   background-image: url(#{resource['images/logo.png']});
-                   height: 80px;
-                   ...
-                */
-            }
-            .nav {
-                background-color: #333;
-                padding: 10px 0;
-            }
-            .nav ul {
-                list-style-type: none;
-                margin: 0;
-                padding: 0;
-                text-align: center;
-            }
-            .nav li {
-                display: inline;
-                margin: 0 15px;
-            }
-            .nav a {
-                color: white;
-                text-decoration: none;
-                font-weight: bold;
-            }
-            .content {
-                flex-grow: 1; /* Makes the content "push" the footer down */
-                padding: 20px;
-                max-width: 1200px;
-                margin: 20px auto;
-                background-color: #ffffff;
-                border-radius: 8px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            }
-            .footer {
-                background-color: #222;
-                color: #aaa;
-                text-align: center;
-                padding: 20px;
-                margin-top: auto; /* Key for "sticking" the footer to the bottom */
-            }
-        </style>
+        <h:outputStylesheet library="css" name="style.css"/>
     </h:head>
 
     <h:body>
 
         <header class="header">
-            <div class="header-logo">🗺️</div>
             <h1>TravelMate</h1>
             <p>Your personal travel assistant</p>
         </header>
-
         <nav class="nav">
             <ul>
-                <li><h:link outcome="/pages/categories" value="Categories"/></li>
+                <li><h:link outcome="/pages/category/categories" value="Categories"/></li>
             </ul>
         </nav>
 
         <main class="content">
             <ui:insert name="content">
-                <h2>Welcome to TravelMate!</h2>
-                <p>This content will only appear if the page using the template does not define its own "content".</p>
+                <article>
+                    <header><h2>Welcome to TravelMate!</h2></header>
+                    <section>
+                        <p>Start planning your trips by browsing available categories.</p>
+                    </section>
+                </article>
             </ui:insert>
         </main>
 
         <footer class="footer">
-            <p>2025 Gdańsk University of Technology.</p>
-            <p>Jakarta EE Project</p>
+            <p>2025 Gdansk University of Technology</p>
+            <p>Jakarta EE Project - JEE Laboratory</p>
         </footer>
 
     </h:body>

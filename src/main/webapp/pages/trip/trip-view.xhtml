@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<ui:composition template="/templates/template.xhtml">
+    <f:metadata>
+        <f:viewParam name="id" value="#{tripDetailBean.tripId}" converter="uuidConverter" />
+        <f:event type="preRenderView" listener="#{tripDetailBean.init}" />
+    </f:metadata>
+
+    <ui:define name="content">
+
+        <article>
+            <header>
+                <h2>Trip Details</h2>
+            </header>
+
+            <section>
+                <dl>
+                    <dt><strong>ID:</strong></dt>
+                    <dd>#{tripDetailBean.trip.id}</dd>
+
+                    <dt><strong>Title:</strong></dt>
+                    <dd>#{tripDetailBean.trip.title}</dd>
+
+                    <dt><strong>Start Date:</strong></dt>
+                    <dd>
+                        <h:outputText value="#{tripDetailBean.trip.startDate}">
+                            <f:convertDateTime pattern="dd-MM-yyyy" type="localDate"/>
+                        </h:outputText>
+                    </dd>
+
+                    <dt><strong>End Date:</strong></dt>
+                    <dd>
+                        <h:outputText value="#{tripDetailBean.trip.endDate}">
+                            <f:convertDateTime pattern="dd-MM-yyyy" type="localDate"/>
+                        </h:outputText>
+                    </dd>
+
+                    <dt><strong>Estimated Cost:</strong></dt>
+                    <dd>
+                        <h:outputText value="#{tripDetailBean.trip.estimatedCost}">
+                            <f:convertNumber type="currency" currencySymbol="PLN " />
+                        </h:outputText>
+                    </dd>
+
+                    <dt><strong>Status:</strong></dt>
+                    <dd>#{tripDetailBean.trip.status}</dd>
+
+                    <dt><strong>Category:</strong></dt>
+                    <dd>
+                        <h:link value="#{tripDetailBean.category.name}" outcome="/pages/category/category-view">
+                            <f:param name="id" value="#{tripDetailBean.category.id}" />
+                        </h:link>
+                    </dd>
+                </dl>
+            </section>
+
+            <nav style="margin-top: 20px;">
+                <h:link value="← Back to Category" outcome="/pages/category/category-view" style="margin-right: 15px;">
+                    <f:param name="id" value="#{tripDetailBean.category.id}" />
+                </h:link>
+
+                <h:link value="Edit" outcome="/pages/trip/trip-edit">
+                    <f:param name="id" value="#{tripDetailBean.trip.id}" />
+                    <f:param name="categoryId" value="#{tripDetailBean.trip.categoryId}" />
+                </h:link>
+            </nav>
+        </article>
+
+    </ui:define>
+
+</ui:composition>
+</html>
+

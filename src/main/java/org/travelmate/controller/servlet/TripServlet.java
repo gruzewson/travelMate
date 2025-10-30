@@ -1,4 +1,4 @@
-package org.travelmate.controller;
+package org.travelmate.controller.servlet;
 
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
@@ -7,17 +7,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.travelmate.model.DestinationCategory;
-import org.travelmate.service.DestinationCategoryService;
+import org.travelmate.model.Trip;
+import org.travelmate.service.TripService;
 
 import java.io.IOException;
 import java.util.UUID;
 
-@WebServlet("/api/categories/*")
-public class DestinationCategoryServlet extends HttpServlet {
+@WebServlet("/api/trips/*")
+public class TripServlet extends HttpServlet {
 
     @Inject
-    private DestinationCategoryService categoryService;
+    private TripService tripService;
     private final Jsonb jsonb = JsonbBuilder.create();
 
 
@@ -29,20 +29,20 @@ public class DestinationCategoryServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            String jsonCategories = jsonb.toJson(categoryService.findAll());
-            resp.getWriter().write(jsonCategories);
+            String jsonTrips = jsonb.toJson(tripService.findAll());
+            resp.getWriter().write(jsonTrips);
         }
         else{
             try{
                 String idStr = pathInfo.substring(1);
-                UUID categoryId = java.util.UUID.fromString(idStr);
-                var categoryOpt = categoryService.find(categoryId);
-                if(categoryOpt.isPresent()){
-                    String jsonCategories = jsonb.toJson(categoryOpt.get());
-                    resp.getWriter().write(jsonCategories);
+                UUID tripId = java.util.UUID.fromString(idStr);
+                var tripOpt = tripService.find(tripId);
+                if(tripOpt.isPresent()){
+                    String jsonTrip = jsonb.toJson(tripOpt.get());
+                    resp.getWriter().write(jsonTrip);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("category not found");
+                    resp.getWriter().write("trip not found");
                 }
             } catch (IllegalArgumentException e){
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -56,9 +56,9 @@ public class DestinationCategoryServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        DestinationCategory category;
+        Trip trip;
         try {
-            category = jsonb.fromJson(req.getReader(), DestinationCategory.class);
+            trip = jsonb.fromJson(req.getReader(), Trip.class);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("Invalid JSON");
@@ -68,31 +68,31 @@ public class DestinationCategoryServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            // create new category
-            category.setId(UUID.randomUUID());
-            categoryService.create(category);
+            // create new trip
+            trip.setId(UUID.randomUUID());
+            tripService.create(trip);
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.getWriter().write(jsonb.toJson(category));
+            resp.getWriter().write(jsonb.toJson(trip));
 
         } else {
-            // update existing category
+            // update existing trip
             try {
-                UUID categoryIdFromPath = UUID.fromString(pathInfo.substring(1));
+                UUID tripIdFromPath = UUID.fromString(pathInfo.substring(1));
 
-                if (categoryService.find(categoryIdFromPath).isPresent()) {
-                    category.setId(categoryIdFromPath);
-                    categoryService.update(category);
+                if (tripService.find(tripIdFromPath).isPresent()) {
+                    trip.setId(tripIdFromPath);
+                    tripService.update(trip);
 
                     resp.setStatus(HttpServletResponse.SC_OK);
-                    resp.getWriter().write(jsonb.toJson(category));
+                    resp.getWriter().write(jsonb.toJson(trip));
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("category not found");
+                    resp.getWriter().write("trip not found");
                 }
             } catch (IllegalArgumentException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().write("Invalid category ID format");
+                resp.getWriter().write("Invalid trip ID format");
             }
         }
     }
@@ -103,25 +103,24 @@ public class DestinationCategoryServlet extends HttpServlet {
 
         if (pathInfo == null || pathInfo.equals("/")) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write("category ID must be provided in the URL path.");
+            resp.getWriter().write("trip ID must be provided in the URL path.");
             return;
         }
 
         try {
-            UUID categoryId = UUID.fromString(pathInfo.substring(1));
+            UUID tripId = UUID.fromString(pathInfo.substring(1));
 
-            var categoryOpt = categoryService.find(categoryId);
-            if(categoryOpt.isPresent()){
-                String jsonCategories = jsonb.toJson(categoryOpt.get());
-                resp.getWriter().write(jsonCategories);
-                categoryService.delete(categoryOpt.get());
+            var tripOpt = tripService.find(tripId);
+            if(tripOpt.isPresent()){
+                String jsonTrip = jsonb.toJson(tripOpt.get());
+                resp.getWriter().write(jsonTrip);
+                tripService.delete(tripOpt.get());
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                resp.getWriter().write("category not found");
+                resp.getWriter().write("trip not found");
             }
         } catch (IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }
-

@@ -1,0 +1,194 @@
+/* src/main/webapp/resources/css/style.css */
+
+/* Reset + box sizing */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Base layout */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Header with image overlay and gradient fallback */
+.header {
+    color: #fff;
+    text-align: center;
+    padding: 6rem 1rem; /* large hero spacing */
+    background:
+            linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+            url("../../images/banner.jpg") center/cover no-repeat;
+    /* fallback gradient if image unavailable */
+    background-color: #003366;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border-bottom: 4px solid #003366;
+}
+
+.header h1 {
+    margin: 10px 0;
+    font-size: 2em;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.header p {
+    font-size: 1em;
+    opacity: 0.9;
+}
+
+/* Navigation */
+.nav {
+    background-color: #222;
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.nav li { display: inline-block; margin: 0; }
+
+.nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 15px 25px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav a:hover { background-color: #667eea; color: white; }
+
+/* Page content container */
+.content {
+    flex-grow: 1;
+    padding: 30px 20px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+/* Footer */
+.footer {
+    background-color: #1a1a1a;
+    color: #aaa;
+    text-align: center;
+    padding: 25px 20px;
+    margin-top: auto;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+}
+
+.footer p { margin: 5px 0; }
+
+/* Article */
+article { margin: 20px 0; }
+
+article header h2 {
+    color: #003366;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+section { margin: 25px 0; }
+
+section h3 { color: #004d99; margin-bottom: 15px; }
+
+/* Definition list layout for details */
+dl {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+dt { font-weight: bold; color: #555; }
+dd { color: #333; }
+
+/* Table styles used by JSF dataTable */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 0.8rem;
+}
+
+.table-header {
+    background-color: #003366;
+    color: white;
+    font-weight: bold;
+    padding: 12px;
+    text-align: left;
+}
+
+.table td, .table th {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+.table-odd-row { background-color: #f9f9f9; }
+.table-even-row { background-color: #ffffff; }
+
+.table tr:hover { background-color: #e8f4f8; }
+
+/* Button-like link and buttons */
+button, .button-link {
+    background-color: #667eea;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.button-link { text-decoration: none; font-weight: 500; box-shadow: 0 1px 0 rgba(0,0,0,0.05); }
+button:hover, .button-link:hover { background-color: #5568d3; }
+
+/* Messages / validation */
+.messages {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.error {
+    color: #dc3545;
+    font-size: 0.8em;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Utility */
+.text-muted { color: #777; font-size: 0.9rem; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header h1 { font-size: 1.5em; padding: 3rem 1rem; }
+    .nav ul { flex-direction: column; }
+    .content { margin: 10px; padding: 20px 15px; }
+    dl { grid-template-columns: 1fr; }
+}

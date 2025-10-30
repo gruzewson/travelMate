@@ -16,7 +16,5 @@ public class Trip {
     private double estimatedCost;
     private TripStatus status;
 
-    private DestinationCategory category;
-    private User user;
-
+    private UUID categoryId;
 }

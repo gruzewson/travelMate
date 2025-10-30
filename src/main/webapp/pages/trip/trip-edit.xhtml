@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<ui:composition template="/templates/template.xhtml">
+    <f:metadata>
+        <f:viewParam name="id" value="#{tripEditBean.tripId}" converter="uuidConverter" />
+        <f:viewParam name="categoryId" value="#{tripEditBean.categoryId}" />
+        <f:event type="preRenderView" listener="#{tripEditBean.init}" />
+    </f:metadata>
+
+    <ui:define name="content">
+
+        <article>
+            <header>
+                <h2>#{tripEditBean.editMode ? 'Edit Trip' : 'Add New Trip'}</h2>
+            </header>
+
+            <section>
+                <h:form>
+                    <h:messages globalOnly="true" styleClass="messages" />
+
+                    <div style="margin-bottom: 15px;">
+                        <h:outputLabel for="title" value="Title:" style="display: block; font-weight: bold; margin-bottom: 5px;" />
+                        <h:inputText id="title" value="#{tripEditBean.trip.title}" required="true"
+                                     requiredMessage="Title is required"
+                                     style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;" />
+                        <h:message for="title" styleClass="error" />
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <h:outputLabel for="startDate" value="Start Date:" style="display: block; font-weight: bold; margin-bottom: 5px;" />
+                        <h:inputText id="startDate" value="#{tripEditBean.trip.startDate}" required="true"
+                                     requiredMessage="Start date is required"
+                                     style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"
+                                     type="date">
+                            <f:convertDateTime pattern="yyyy-MM-dd" type="localDate"/>
+                        </h:inputText>
+                        <h:message for="startDate" styleClass="error" />
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <h:outputLabel for="endDate" value="End Date:" style="display: block; font-weight: bold; margin-bottom: 5px;" />
+                        <h:inputText id="endDate" value="#{tripEditBean.trip.endDate}" required="true"
+                                     requiredMessage="End date is required"
+                                     style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"
+                                     type="date">
+                            <f:convertDateTime pattern="yyyy-MM-dd" type="localDate"/>
+                        </h:inputText>
+                        <h:message for="endDate" styleClass="error" />
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <h:outputLabel for="cost" value="Estimated Cost (PLN):" style="display: block; font-weight: bold; margin-bottom: 5px;" />
+                        <h:inputText id="cost" value="#{tripEditBean.trip.estimatedCost}" required="true"
+                                     requiredMessage="Cost is required"
+                                     style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+                            <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+                        </h:inputText>
+                        <h:message for="cost" styleClass="error" />
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <h:outputLabel for="status" value="Status:" style="display: block; font-weight: bold; margin-bottom: 5px;" />
+                        <h:selectOneMenu id="status" value="#{tripEditBean.trip.status}" required="true"
+                                         style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+                            <f:selectItems value="#{tripEditBean.tripStatuses}" var="status"
+                                           itemValue="#{status}" itemLabel="#{status}" />
+                        </h:selectOneMenu>
+                        <h:message for="status" styleClass="error" />
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h:outputLabel for="category" value="Category:" style="display: block; font-weight: bold; margin-bottom: 5px;" />
+                        <h:selectOneMenu id="category" value="#{tripEditBean.categoryId}" required="true"
+                                         requiredMessage="Category is required"
+                                         style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+                            <f:selectItem itemValue="" itemLabel="-- Select Category --" noSelectionOption="true" />
+                            <f:selectItems value="#{tripEditBean.allCategories}" var="cat"
+                                           itemValue="#{cat.id}" itemLabel="#{cat.name}" />
+                        </h:selectOneMenu>
+                        <h:message for="category" styleClass="error" />
+                    </div>
+
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee; display: flex; gap: 15px; align-items: center;">
+                        <h:commandButton value="Save" action="#{tripEditBean.save}"
+                                         style="padding: 12px 24px; background-color: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background-color 0.3s;" />
+                        <h:button value="Cancel" outcome="/pages/category/category-view"
+                                  style="padding: 12px 24px; background-color: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; text-decoration: none; transition: background-color 0.3s;">
+                            <f:param name="id" value="#{tripEditBean.categoryId}" />
+                        </h:button>
+                    </div>
+                </h:form>
+            </section>
+        </article>
+
+    </ui:define>
+
+</ui:composition>
+</html>
+

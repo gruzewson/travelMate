@@ -1,11 +1,8 @@
-package org.travelmate.controller;
+package org.travelmate.controller.servlet;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import org.travelmate.repository.AvatarRepository;
 import org.travelmate.service.AvatarService;
 
 import java.io.*;
