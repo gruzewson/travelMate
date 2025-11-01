@@ -17,12 +17,18 @@ public class TripRepository {
         return new ArrayList<>(Trips.values());
     }
 
+    public List<Trip> findByCategoryId(UUID categoryId) {
+        return Trips.values().stream()
+                .filter(t -> categoryId.equals(t.getCategoryId()))
+                .toList();
+    }
+
     public void create(Trip entity) {
         Trips.put(entity.getId(), entity);
     }
 
-    public void delete(Trip entity) {
-        Trips.remove(entity.getId());
+    public void delete(UUID id) {
+        Trips.remove(id);
     }
 
     public void update(Trip entity) {

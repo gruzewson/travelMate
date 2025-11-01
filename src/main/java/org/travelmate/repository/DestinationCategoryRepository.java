@@ -22,8 +22,8 @@ public class DestinationCategoryRepository {
         categories.put(entity.getId(), entity);
     }
 
-    public void delete(DestinationCategory entity) {
-        categories.remove(entity.getId());
+    public void delete(UUID id) {
+        categories.remove(id);
     }
 
     public void update(DestinationCategory entity) {

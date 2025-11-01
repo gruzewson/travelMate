@@ -15,6 +15,9 @@ public class DestinationCategoryService {
     @Inject
     private DestinationCategoryRepository repository;
 
+    @Inject
+    private TripService tripService;
+
     public Optional<DestinationCategory> find(UUID id) {
         return repository.find(id);
     }
@@ -27,8 +30,9 @@ public class DestinationCategoryService {
         repository.create(entity);
     }
 
-    public void delete(DestinationCategory entity) {
-        repository.delete(entity);
+    public void delete(UUID categoryId) {
+        tripService.deleteByCategoryId(categoryId);
+        repository.delete(categoryId);
     }
 
     public void update(DestinationCategory entity) {

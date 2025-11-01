@@ -13,25 +13,33 @@ import java.util.UUID;
 public class TripService {
 
     @Inject
-    private TripRepository TripRepository;
+    private TripRepository tripRepository;
 
     public Optional<Trip> find(UUID id) {
-        return TripRepository.find(id);
+        return tripRepository.find(id);
     }
 
     public List<Trip> findAll() {
-        return TripRepository.findAll();
+        return tripRepository.findAll();
+    }
+
+    public List<Trip> findByCategoryId(UUID categoryId) {
+        return tripRepository.findByCategoryId(categoryId);
     }
 
     public void create(Trip entity) {
-        TripRepository.create(entity);
+        tripRepository.create(entity);
     }
 
-    public void delete(Trip entity) {
-        TripRepository.delete(entity);
+    public void delete(UUID id) {
+        tripRepository.delete(id);
+    }
+
+    public void deleteByCategoryId(UUID categoryId) {
+        findByCategoryId(categoryId).forEach(trip -> tripRepository.delete(trip.getId()));
     }
 
     public void update(Trip entity) {
-        TripRepository.update(entity);
+        tripRepository.update(entity);
     }
 }

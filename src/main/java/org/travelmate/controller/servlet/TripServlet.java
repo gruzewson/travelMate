@@ -13,7 +13,7 @@ import org.travelmate.service.TripService;
 import java.io.IOException;
 import java.util.UUID;
 
-@WebServlet("/api/trips/*")
+@WebServlet("/legacy/trips/*")
 public class TripServlet extends HttpServlet {
 
     @Inject
@@ -114,7 +114,7 @@ public class TripServlet extends HttpServlet {
             if(tripOpt.isPresent()){
                 String jsonTrip = jsonb.toJson(tripOpt.get());
                 resp.getWriter().write(jsonTrip);
-                tripService.delete(tripOpt.get());
+                tripService.delete(tripOpt.get().getId());
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 resp.getWriter().write("trip not found");

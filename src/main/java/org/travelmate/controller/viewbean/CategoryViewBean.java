@@ -1,4 +1,4 @@
-package org.travelmate.controller;
+package org.travelmate.controller.viewbean;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -45,16 +45,7 @@ public class CategoryViewBean implements Serializable {
 
     public String deleteCategory(UUID categoryId) {
         categoryService.find(categoryId).ifPresent(category -> {
-            // Delete all trips associated with this category
-            List<Trip> trips = tripService.findAll().stream()
-                    .filter(trip -> trip.getCategoryId() != null &&
-                            trip.getCategoryId().equals(categoryId))
-                    .toList();
-
-            trips.forEach(tripService::delete);
-
-            // Delete the category
-            categoryService.delete(category);
+            categoryService.delete(categoryId);
 
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Category has been deleted", null));
@@ -63,11 +54,9 @@ public class CategoryViewBean implements Serializable {
     }
 
     public String deleteTrip(UUID tripId, UUID categoryId) {
-        tripService.find(tripId).ifPresent(trip -> {
-            tripService.delete(trip);
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Trip has been deleted", null));
-        });
+        tripService.delete(tripId);
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Trip has been deleted", null));
         return "/pages/category/category-view?faces-redirect=true&id=" + categoryId;
     }
 }

@@ -1,6 +1,5 @@
-package org.travelmate.controller;
+package org.travelmate.controller.viewbean;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;

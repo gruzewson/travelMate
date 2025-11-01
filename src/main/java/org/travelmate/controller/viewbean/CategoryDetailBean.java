@@ -1,4 +1,4 @@
-package org.travelmate.controller;
+package org.travelmate.controller.viewbean;
 
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -14,30 +14,32 @@ import org.travelmate.service.TripService;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Named
 @ViewScoped
-public class TripDetailBean implements Serializable {
+public class CategoryDetailBean implements Serializable {
 
-    @Inject
-    private TripService tripService;
-    
     @Inject
     private DestinationCategoryService categoryService;
 
-    @Getter
-    private Trip trip;
+    @Inject
+    private TripService tripService;
 
     @Getter
     @Setter
-    private UUID tripId;
+    private UUID categoryId;
+    @Getter
+    private DestinationCategory category;
+    @Getter
+    private List<Trip> trips;
 
     public void init() {
-        if (tripId != null) {
-            trip = tripService.find(tripId).orElse(null);
+        if (categoryId != null) {
+            category = categoryService.find(categoryId).orElse(null);
 
-            if (trip == null) {
+            if (category == null) {
                 FacesContext context = FacesContext.getCurrentInstance();
                 HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
                 try {
@@ -46,14 +48,13 @@ public class TripDetailBean implements Serializable {
                 } catch (IOException e) {
                     throw new RuntimeException("Failed to send 404 error", e);
                 }
+                return;
             }
-        }
-    }
 
-    public DestinationCategory getCategory() {
-        if (trip != null && trip.getCategoryId() != null) {
-            return categoryService.find(trip.getCategoryId()).orElse(null);
+            trips = tripService.findAll().stream()
+                    .filter(trip -> trip.getCategoryId() != null &&
+                            trip.getCategoryId().equals(categoryId))
+                    .toList();
         }
-        return null;
     }
 }

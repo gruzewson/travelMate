@@ -1,12 +1,15 @@
+@baseUrl = http://localhost:9080
+@categoryId = 8013afd7-4361-4fb0-8a89-d7972bafd1a8
+@tripId = 56e47e42-7a98-4a71-b7ea-a061fbe65fa9
 
-### Get all trips
-GET http://localhost:9080/api/trips
+### Get all trips for a category
+GET {{baseUrl}}/api/categories/{{categoryId}}/trips
 
-### Gets a trip by their ID
-GET http://localhost:9080/api/trips/4e6b5eae-b055-471a-b9eb-0cd0930772e0
+### Get a trip by ID in a category
+GET {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}
 
-### Create a new trip
-PUT http://localhost:9080/api/trips
+### Create a new trip in a category
+POST {{baseUrl}}/api/categories/{{categoryId}}/trips
 Content-Type: application/json
 
 {
@@ -18,16 +21,16 @@ Content-Type: application/json
 }
 
 ### Update a trip
-PUT http://localhost:9080/api/trips/4e6b5eae-b055-471a-b9eb-0cd0930772e0
+PUT {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}
 Content-Type: application/json
 
 {
-  "title": "Friends",
+  "title": "Updated Trip Title",
   "startDate": "2024-06-01",
   "endDate": "2024-06-14",
   "estimatedCost": 600.0,
   "status": "COMPLETED"
 }
 
-### Deletes a trip
-DELETE http://localhost:9080/api/trips/4e6b5eae-b055-471a-b9eb-0cd0930772e0
+### Delete a trip
+DELETE {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}

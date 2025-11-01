@@ -1,12 +1,14 @@
+@baseUrl = http://localhost:9080
+@categoryId = 16ca3be5-b4c6-4f6d-9118-cfbf0fb13d27
 
-### Get all Categories
-GET http://localhost:9080/api/categories
+### Get all categories
+GET {{baseUrl}}/api/categories
 
-### Gets a category by its ID
-GET http://localhost:9080/api/categories/19cf86f3-9112-47f9-831a-20c81c0a3d6d
+### Get a category by ID
+GET {{baseUrl}}/api/categories/{{categoryId}}
 
 ### Create a new category
-PUT http://localhost:9080/api/categories
+POST {{baseUrl}}/api/categories
 Content-Type: application/json
 
 {
@@ -14,8 +16,8 @@ Content-Type: application/json
   "description": "Two-week family trip to the coast."
 }
 
-### Update category
-PUT http://localhost:9080/api/categories/19cf86f3-9112-47f9-831a-20c81c0a3d6d
+### Update a category
+PUT {{baseUrl}}/api/categories/{{categoryId}}
 Content-Type: application/json
 
 {
@@ -23,5 +25,5 @@ Content-Type: application/json
   "description": "Weekend getaway with friends."
 }
 
-### Deletes a category
-DELETE http://localhost:9080/api/categories/19cf86f3-9112-47f9-831a-20c81c0a3d6d
+### Delete a category
+DELETE {{baseUrl}}/api/categories/{{categoryId}}
