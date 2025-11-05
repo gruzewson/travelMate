@@ -1,5 +1,6 @@
 package org.travelmate.controller.rest;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -13,7 +14,8 @@ import java.util.UUID;
 @Path("/categories/{categoryId}/trips")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TripResource {
+@ApplicationScoped
+public class TripApi {
 
     @Inject
     private TripService tripService;

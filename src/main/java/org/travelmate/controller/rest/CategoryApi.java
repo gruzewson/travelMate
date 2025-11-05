@@ -1,5 +1,6 @@
 package org.travelmate.controller.rest;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -12,7 +13,8 @@ import java.util.UUID;
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class CategoryResource {
+@ApplicationScoped
+public class CategoryApi {
 
     @Inject
     private DestinationCategoryService categoryService;
