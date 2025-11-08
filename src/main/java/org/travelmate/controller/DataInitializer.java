@@ -1,9 +1,9 @@
 package org.travelmate.controller;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.ejb.Singleton;
-import jakarta.ejb.Startup;
-import jakarta.inject.Inject;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 import org.travelmate.model.DestinationCategory;
 import org.travelmate.model.Trip;
 import org.travelmate.model.enums.TripStatus;
@@ -12,24 +12,22 @@ import org.travelmate.service.TripService;
 
 import java.time.LocalDate;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 /**
  * Component for initializing sample data and demonstrating service operations.
  * Runs automatically on application startup.
  */
-@Singleton
-@Startup
-public class DataInitializer {
+@WebListener
+public class DataInitializer implements ServletContextListener {
 
-    @Inject
     private DestinationCategoryService categoryService;
-
-    @Inject
     private TripService tripService;
 
-    @PostConstruct
-    public void init() {
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        // Pobierz beany z CDI
+        categoryService = CDI.current().select(DestinationCategoryService.class).get();
+        tripService = CDI.current().select(TripService.class).get();
 
         // Creating categories
         DestinationCategory mountains = createCategory(
@@ -111,7 +109,12 @@ public class DataInitializer {
         trip.setEndDate(endDate);
         trip.setEstimatedCost(cost);
         trip.setStatus(status);
-        trip.setCategoryId(category.getId());
+        trip.setCategory(category);
         tripService.create(trip);
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        // Cleanup code if needed
     }
 }

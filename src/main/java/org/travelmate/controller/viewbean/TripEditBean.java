@@ -45,7 +45,6 @@ public class TripEditBean implements Serializable {
     public void init() {
         Map<String, String> params = FacesContext.getCurrentInstance()
                 .getExternalContext().getRequestParameterMap();
-        String idParam = params.get("id");
         String categoryParam = params.get("categoryId");
 
         if (categoryParam != null) {
@@ -69,8 +68,8 @@ public class TripEditBean implements Serializable {
                 return;
             }
 
-            if (trip.getCategoryId() != null) {
-                categoryId = trip.getCategoryId().toString();
+            if (trip.getCategory() != null) {
+                categoryId = trip.getCategory().getId().toString();
             }
         } else {
             // Add mode
@@ -92,13 +91,11 @@ public class TripEditBean implements Serializable {
                 return null;
             }
 
-            // Set category ID
+            // Set category object
             if (categoryId != null && !categoryId.isEmpty()) {
                 UUID catId = UUID.fromString(categoryId);
-                // Verify category exists
-                if (categoryService.find(catId).isPresent()) {
-                    trip.setCategoryId(catId);
-                }
+                // Find and set category
+                categoryService.find(catId).ifPresent(trip::setCategory);
             }
 
             if (editMode) {

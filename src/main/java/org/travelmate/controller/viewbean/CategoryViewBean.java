@@ -32,14 +32,14 @@ public class CategoryViewBean implements Serializable {
 
     public Map<UUID, List<Trip>> getTripsByCategory() {
         return tripService.findAll().stream()
-                .filter(trip -> trip.getCategoryId() != null)
-                .collect(Collectors.groupingBy(Trip::getCategoryId));
+                .filter(trip -> trip.getCategory() != null)
+                .collect(Collectors.groupingBy(trip -> trip.getCategory().getId()));
     }
 
     public int getTripCount(UUID categoryId) {
         return (int) tripService.findAll().stream()
-                .filter(trip -> trip.getCategoryId() != null &&
-                        trip.getCategoryId().equals(categoryId))
+                .filter(trip -> trip.getCategory() != null &&
+                        trip.getCategory().getId().equals(categoryId))
                 .count();
     }
 

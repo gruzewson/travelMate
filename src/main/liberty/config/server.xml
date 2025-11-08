@@ -2,10 +2,26 @@
     <featureManager>
         <feature>webProfile-10.0</feature>
     </featureManager>
+
     <basicRegistry id="defaultBasicRegistry" realm="BasicRealm">
         <user name="username" password="password" />
     </basicRegistry>
+
     <keyStore id="defaultKeyStore" password="password" />
+
     <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9080" httpsPort="9443" />
+
+    <library id="H2JDBCLib">
+        <fileset dir="${shared.resource.dir}/h2" includes="*.jar"/>
+    </library>
+    <!-- Konfiguracja DataSource dla bazy H2 w pamięci -->
+    <dataSource id="TravelMateDS" jndiName="jdbc/TravelMateDS">
+        <jdbcDriver libraryRef="H2JDBCLib"/>
+        <properties
+            URL="jdbc:h2:mem:travelmate;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+            user="sa"
+            password=""/>
+    </dataSource>
+
     <webApplication location="travelmate.war" contextRoot="/"/>
 </server>

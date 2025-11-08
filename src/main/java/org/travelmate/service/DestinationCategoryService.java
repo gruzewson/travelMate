@@ -2,6 +2,7 @@ package org.travelmate.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.travelmate.model.DestinationCategory;
 import org.travelmate.repository.DestinationCategoryRepository;
 
@@ -26,15 +27,18 @@ public class DestinationCategoryService {
         return repository.findAll();
     }
 
+    @Transactional
     public void create(DestinationCategory entity) {
         repository.create(entity);
     }
 
+    @Transactional
     public void delete(UUID categoryId) {
         tripService.deleteByCategoryId(categoryId);
         repository.delete(categoryId);
     }
 
+    @Transactional
     public void update(DestinationCategory entity) {
         repository.update(entity);
     }

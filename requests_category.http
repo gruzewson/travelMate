@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:9080
-@categoryId = 16ca3be5-b4c6-4f6d-9118-cfbf0fb13d27
+@categoryId = 223e0158-d3a0-444d-8c1f-dfc55af5fa71
 
 ### Get all categories
 GET {{baseUrl}}/api/categories

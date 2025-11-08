@@ -52,8 +52,8 @@ public class CategoryDetailBean implements Serializable {
             }
 
             trips = tripService.findAll().stream()
-                    .filter(trip -> trip.getCategoryId() != null &&
-                            trip.getCategoryId().equals(categoryId))
+                    .filter(trip -> trip.getCategory() != null &&
+                            trip.getCategory().getId().equals(categoryId))
                     .toList();
         }
     }

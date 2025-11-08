@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.travelmate.model.DestinationCategory;
 import org.travelmate.model.Trip;
-import org.travelmate.service.DestinationCategoryService;
 import org.travelmate.service.TripService;
 
 import java.io.IOException;
@@ -22,9 +21,6 @@ public class TripDetailBean implements Serializable {
 
     @Inject
     private TripService tripService;
-    
-    @Inject
-    private DestinationCategoryService categoryService;
 
     @Getter
     private Trip trip;
@@ -51,8 +47,8 @@ public class TripDetailBean implements Serializable {
     }
 
     public DestinationCategory getCategory() {
-        if (trip != null && trip.getCategoryId() != null) {
-            return categoryService.find(trip.getCategoryId()).orElse(null);
+        if (trip != null && trip.getCategory() != null) {
+            return trip.getCategory();
         }
         return null;
     }

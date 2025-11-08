@@ -37,22 +37,21 @@ public class TripApi {
                            @PathParam("tripId") UUID tripId) {
 
         return tripService.find(tripId)
-                .filter(t -> t.getCategoryId().equals(categoryId))
+                .filter(t -> t.getCategory() != null && t.getCategory().getId().equals(categoryId))
                 .map(t -> Response.ok(t).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @POST
     public Response create(@PathParam("categoryId") UUID categoryId, Trip trip) {
-        if (categoryService.find(categoryId).isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        trip.setId(UUID.randomUUID());
-        trip.setCategoryId(categoryId);
-
-        tripService.create(trip);
-        return Response.status(Response.Status.CREATED).entity(trip).build();
+        return categoryService.find(categoryId)
+                .map(category -> {
+                    trip.setId(UUID.randomUUID());
+                    trip.setCategory(category);
+                    tripService.create(trip);
+                    return Response.status(Response.Status.CREATED).entity(trip).build();
+                })
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @PUT
@@ -62,13 +61,14 @@ public class TripApi {
                            Trip updated) {
 
         return tripService.find(tripId)
-                .filter(t -> t.getCategoryId().equals(categoryId))
-                .map(existing -> {
-                    updated.setId(tripId);
-                    updated.setCategoryId(categoryId);
-                    tripService.update(updated);
-                    return Response.ok(updated).build();
-                })
+                .filter(t -> t.getCategory() != null && t.getCategory().getId().equals(categoryId))
+                .flatMap(existing -> categoryService.find(categoryId)
+                        .map(category -> {
+                            updated.setId(tripId);
+                            updated.setCategory(category);
+                            tripService.update(updated);
+                            return Response.ok(updated).build();
+                        }))
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
@@ -78,7 +78,7 @@ public class TripApi {
                            @PathParam("tripId") UUID tripId) {
 
         return tripService.find(tripId)
-                .filter(t -> t.getCategoryId().equals(categoryId))
+                .filter(t -> t.getCategory() != null && t.getCategory().getId().equals(categoryId))
                 .map(existing -> {
                     tripService.delete(existing.getId());
                     return Response.noContent().build();

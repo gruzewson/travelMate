@@ -1,37 +1,45 @@
 package org.travelmate.repository;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.travelmate.model.Trip;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @ApplicationScoped
 public class TripRepository {
-    private final Map<UUID, Trip> Trips = new ConcurrentHashMap<>();
+
+    @PersistenceContext(unitName = "travelMatePU")
+    private EntityManager em;
 
     public Optional<Trip> find(UUID id) {
-        return Optional.ofNullable(Trips.get(id));
+        return Optional.ofNullable(em.find(Trip.class, id));
     }
 
     public List<Trip> findAll() {
-        return new ArrayList<>(Trips.values());
+        return em.createQuery("SELECT t FROM Trip t", Trip.class)
+                .getResultList();
     }
 
     public List<Trip> findByCategoryId(UUID categoryId) {
-        return Trips.values().stream()
-                .filter(t -> categoryId.equals(t.getCategoryId()))
-                .toList();
+        return em.createQuery(
+                "SELECT t FROM Trip t WHERE t.category.id = :categoryId", Trip.class)
+                .setParameter("categoryId", categoryId)
+                .getResultList();
     }
 
     public void create(Trip entity) {
-        Trips.put(entity.getId(), entity);
+        em.persist(entity);
     }
 
     public void delete(UUID id) {
-        Trips.remove(id);
+        Trip entity = em.find(Trip.class, id);
+        if (entity != null) {
+            em.remove(entity);
+        }
     }
 
     public void update(Trip entity) {
-        Trips.put(entity.getId(), entity);
+        em.merge(entity);
     }
 }
