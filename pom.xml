@@ -42,7 +42,6 @@
             <version>2.15.3</version>
             <scope>provided</scope>
         </dependency>
-        <!-- H2 Database - baza danych w pamięci -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

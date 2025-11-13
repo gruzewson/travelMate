@@ -60,7 +60,8 @@ public class TripEditBean implements Serializable {
                 FacesContext context = FacesContext.getCurrentInstance();
                 HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
                 try {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    String message = "Trip with ID " + tripId + " does not exist.";
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
                     context.responseComplete();
                 } catch (IOException e) {
                     throw new RuntimeException("Failed to send 404 error", e);
@@ -84,7 +85,7 @@ public class TripEditBean implements Serializable {
         try {
             // Validate dates
             if (trip.getStartDate() != null && trip.getEndDate() != null &&
-                trip.getStartDate().isAfter(trip.getEndDate())) {
+                    trip.getStartDate().isAfter(trip.getEndDate())) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
                                 "Start date cannot be later than end date", null));

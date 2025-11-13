@@ -25,11 +25,16 @@ public class DataInitializer implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        // Pobierz beany z CDI
         categoryService = CDI.current().select(DestinationCategoryService.class).get();
         tripService = CDI.current().select(TripService.class).get();
 
-        // Creating categories
+        if (!categoryService.findAll().isEmpty()) {
+            System.out.println("Data already initialized, skipping initialization...");
+            return;
+        }
+
+        System.out.println("Initializing application data...");
+
         DestinationCategory mountains = createCategory(
                 "Mountains",
                 "Mountain expeditions - trekking, climbing, scenic views"

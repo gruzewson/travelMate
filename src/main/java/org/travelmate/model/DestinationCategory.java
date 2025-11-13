@@ -3,17 +3,17 @@ package org.travelmate.model;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "destination_category")
 public class DestinationCategory {
 
     @Id
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false)
@@ -23,18 +23,12 @@ public class DestinationCategory {
     private String description;
 
     @OneToMany(
-        mappedBy = "category",
-        cascade = CascadeType.REMOVE,
-        fetch = FetchType.LAZY
+            mappedBy = "category",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
     )
     @ToString.Exclude
-    @JsonbTransient  // Nie serializuj listy trips w JSON
+    @JsonbTransient
     private List<Trip> trips = new ArrayList<>();
-
-    public DestinationCategory(UUID id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.trips = new ArrayList<>();
-    }
 }

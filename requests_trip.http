@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:9080
-@categoryId = 223e0158-d3a0-444d-8c1f-dfc55af5fa71
-@tripId = 9c8bc4aa-2cd5-4c81-94ed-45bf599f909a
+@categoryId = ec24ab15-0f4e-41ed-945d-66834672eb5e
+@tripId = 3d645bbe-52d0-4a31-85c0-d92769aacc9f
 
 ### Get all trips for a category
 GET {{baseUrl}}/api/categories/{{categoryId}}/trips

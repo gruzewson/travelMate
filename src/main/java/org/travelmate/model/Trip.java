@@ -15,6 +15,7 @@ import java.util.UUID;
 public class Trip {
 
     @Id
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false)
@@ -33,12 +34,11 @@ public class Trip {
     @Column(name = "status")
     private TripStatus status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    @JsonbTransient  // Nie serializuj całego obiektu category
+    @JsonbTransient
     private DestinationCategory category;
 
-    // Getter dla categoryId do serializacji JSON
     public UUID getCategoryId() {
         return category != null ? category.getId() : null;
     }

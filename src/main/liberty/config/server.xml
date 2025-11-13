@@ -14,7 +14,6 @@
     <library id="H2JDBCLib">
         <fileset dir="${shared.resource.dir}/h2" includes="*.jar"/>
     </library>
-    <!-- Konfiguracja DataSource dla bazy H2 w pamięci -->
     <dataSource id="TravelMateDS" jndiName="jdbc/TravelMateDS">
         <jdbcDriver libraryRef="H2JDBCLib"/>
         <properties

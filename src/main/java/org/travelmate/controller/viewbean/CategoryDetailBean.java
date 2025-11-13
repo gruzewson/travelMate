@@ -43,7 +43,8 @@ public class CategoryDetailBean implements Serializable {
                 FacesContext context = FacesContext.getCurrentInstance();
                 HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
                 try {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    String message = "Category with ID " + categoryId + " does not exist.";
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
                     context.responseComplete();
                 } catch (IOException e) {
                     throw new RuntimeException("Failed to send 404 error", e);
