@@ -1,12 +1,12 @@
 package org.travelmate.repository;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.travelmate.model.Trip;
 import java.util.*;
 
-@ApplicationScoped
+@Stateless
 public class TripRepository {
 
     @PersistenceContext(unitName = "travelMatePU")
@@ -25,6 +25,13 @@ public class TripRepository {
         return em.createQuery(
                 "SELECT t FROM Trip t WHERE t.category.id = :categoryId", Trip.class)
                 .setParameter("categoryId", categoryId)
+                .getResultList();
+    }
+
+    public List<Trip> findByUserId(UUID userId) {
+        return em.createQuery(
+                "SELECT t FROM Trip t WHERE t.user.id = :userId", Trip.class)
+                .setParameter("userId", userId)
                 .getResultList();
     }
 

@@ -1,8 +1,7 @@
 package org.travelmate.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import org.travelmate.model.Trip;
 import org.travelmate.repository.TripRepository;
 
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@Stateless
 public class TripService {
 
     @Inject
@@ -28,22 +27,22 @@ public class TripService {
         return tripRepository.findByCategoryId(categoryId);
     }
 
-    @Transactional
+    public List<Trip> findByUserId(UUID userId) {
+        return tripRepository.findByUserId(userId);
+    }
+
     public void create(Trip entity) {
         tripRepository.create(entity);
     }
 
-    @Transactional
     public void delete(UUID id) {
         tripRepository.delete(id);
     }
 
-    @Transactional
     public void deleteByCategoryId(UUID categoryId) {
         findByCategoryId(categoryId).forEach(trip -> tripRepository.delete(trip.getId()));
     }
 
-    @Transactional
     public void update(Trip entity) {
         tripRepository.update(entity);
     }

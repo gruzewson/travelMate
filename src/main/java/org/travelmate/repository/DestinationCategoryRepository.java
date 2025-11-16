@@ -1,13 +1,13 @@
 package org.travelmate.repository;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.travelmate.model.DestinationCategory;
 
 import java.util.*;
 
-@ApplicationScoped
+@Stateless
 public class DestinationCategoryRepository {
 
     @PersistenceContext(unitName = "travelMatePU")

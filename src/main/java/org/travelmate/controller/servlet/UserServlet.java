@@ -13,7 +13,7 @@ import org.travelmate.service.UserService;
 import java.io.IOException;
 import java.util.UUID;
 
-@WebServlet("/api/users/*")
+@WebServlet("legacy/users/*")
 public class UserServlet extends HttpServlet {
 
     @Inject
@@ -112,15 +112,15 @@ public class UserServlet extends HttpServlet {
 
             var userOpt = userService.find(userId);
             if(userOpt.isPresent()){
-                String jsonUser = jsonb.toJson(userOpt.get());
-                resp.getWriter().write(jsonUser);
-                userService.delete(userOpt.get());
+                userService.delete(userId);
+                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 resp.getWriter().write("User not found");
             }
         } catch (IllegalArgumentException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("Invalid user ID format");
         }
     }
 }

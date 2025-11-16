@@ -39,7 +39,16 @@ public class Trip {
     @JsonbTransient
     private DestinationCategory category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonbTransient
+    private User user;
+
     public UUID getCategoryId() {
         return category != null ? category.getId() : null;
+    }
+
+    public UUID getUserId() {
+        return user != null ? user.getId() : null;
     }
 }

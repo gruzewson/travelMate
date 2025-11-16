@@ -1,6 +1,6 @@
 package org.travelmate.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import org.travelmate.repository.AvatarRepository;
 
@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.nio.file.*;
 import java.util.Optional;
 
-@ApplicationScoped
+@Stateless
 public class AvatarService {
 
     @Inject
