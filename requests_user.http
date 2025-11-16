@@ -1,31 +1,39 @@
-@userId = 9ab24b75-76db-41b1-aa83-8c3992b894d0
+@baseUrl = http://localhost:9080
+@userId = 7de5816e-19a8-4f8b-8c32-667caf59b0da
 
-### Get all users
-GET http://localhost:9080/api/users
-
-### Gets a user by their ID
-GET http://localhost:9080/api/users/{{userId}}
-
-### Get trips for a specific user
-GET http://localhost:9080/api/users/{{userId}}/trips
-
-### Register a new user (Create)
-POST http://localhost:9080/api/users
+### Register a new user (NO AUTH REQUIRED)
+POST {{baseUrl}}/api/users/register
 Content-Type: application/json
 
 {
   "login": "newuser",
+  "password": "newuser123",
   "dateOfBirth": "1995-03-20"
 }
 
-### Update a user
-PUT http://localhost:9080/api/users/{{userId}}
+### Get all users (ADMIN ONLY)
+GET {{baseUrl}}/api/users
+Authorization: Basic admin admin123
+
+### Gets a user by their ID
+GET {{baseUrl}}/api/users/{{userId}}
+Authorization: Basic john john123
+
+### Get trips for a specific user
+GET {{baseUrl}}/api/users/{{userId}}/trips
+Authorization: Basic john john123
+
+### Update a user (ADMIN ONLY)
+PUT {{baseUrl}}/api/users/{{userId}}
 Content-Type: application/json
+Authorization: Basic admin admin123
 
 {
   "login": "andy",
   "dateOfBirth": "1985-10-30"
 }
 
-### Deletes a user
-DELETE http://localhost:9080/api/users/{{userId}}
+### Deletes a user (ADMIN ONLY)
+DELETE {{baseUrl}}/api/users/{{userId}}
+Authorization: Basic admin admin123
+

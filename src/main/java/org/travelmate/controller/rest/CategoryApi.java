@@ -1,6 +1,7 @@
 package org.travelmate.controller.rest;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -13,19 +14,20 @@ import java.util.UUID;
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@ApplicationScoped
 public class CategoryApi {
 
     @Inject
     private DestinationCategoryService categoryService;
 
     @GET
+    @PermitAll
     public Response getAll() {
         return Response.ok(categoryService.findAll()).build();
     }
 
     @GET
     @Path("/{id}")
+    @PermitAll
     public Response getOne(@PathParam("id") UUID id) {
         return categoryService.find(id)
                 .map(c -> Response.ok(c).build())
@@ -33,6 +35,7 @@ public class CategoryApi {
     }
 
     @POST
+    @RolesAllowed("ADMIN")
     public Response create(DestinationCategory category) {
         category.setId(UUID.randomUUID());
         categoryService.create(category);
@@ -41,18 +44,21 @@ public class CategoryApi {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed("ADMIN")
     public Response update(@PathParam("id") UUID id, DestinationCategory updated) {
         return categoryService.find(id)
                 .map(existing -> {
-                    updated.setId(id);
-                    categoryService.update(updated);
-                    return Response.ok(updated).build();
+                    existing.setName(updated.getName());
+                    existing.setDescription(updated.getDescription());
+                    categoryService.update(existing);
+                    return Response.ok(existing).build();
                 })
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed("ADMIN")
     public Response delete(@PathParam("id") UUID id) {
         if (categoryService.find(id).isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();

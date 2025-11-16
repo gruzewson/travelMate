@@ -3,7 +3,8 @@ package org.travelmate.model;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.ToString;
+
+import org.travelmate.model.enums.UserRole;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +24,15 @@ public class User {
     @Column(nullable = false, unique = true)
     private String login;
 
+    @ToString.Exclude
+    @JsonbTransient
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
+
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
@@ -35,5 +45,15 @@ public class User {
         this.id = UUID.randomUUID();
         this.login = login;
         this.dateOfBirth = dateOfBirth;
+        this.role = UserRole.USER; // default role
+    }
+
+    public User(String login, String password, UserRole role, LocalDate dateOfBirth) {
+        this.id = UUID.randomUUID();
+        this.login = login;
+        this.password = password;
+        this.role = role;
+        this.dateOfBirth = dateOfBirth;
     }
 }
+

@@ -1,11 +1,9 @@
 <server description="defaultServer">
     <featureManager>
         <feature>webProfile-10.0</feature>
+        <feature>appSecurity-5.0</feature>
     </featureManager>
 
-    <basicRegistry id="defaultBasicRegistry" realm="BasicRealm">
-        <user name="username" password="password" />
-    </basicRegistry>
 
     <keyStore id="defaultKeyStore" password="password" />
 

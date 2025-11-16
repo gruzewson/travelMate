@@ -1,29 +1,38 @@
 @baseUrl = http://localhost:9080
-@categoryId = 8d625ce8-22fe-44e9-8424-edfe29199253
+@categoryId = c2ac24ab-a565-4a55-936c-25ffbec7dc32
 
-### Get all categories
+### Get all categories (authenticated user john)
 GET {{baseUrl}}/api/categories
+Authorization: Basic john john123
 
-### Get a category by ID
+### Get all categories (authenticated user admin)
+GET {{baseUrl}}/api/categories
+Authorization: Basic admin admin123
+
+### Get a category by ID (authenticated user)
 GET {{baseUrl}}/api/categories/{{categoryId}}
+Authorization: Basic john john123
 
-### Create a new category
+### Create a new category (ADMIN ONLY)
 POST {{baseUrl}}/api/categories
 Content-Type: application/json
+Authorization: Basic admin admin123
 
 {
   "name": "Family Vacation",
   "description": "Two-week family trip to the coast."
 }
 
-### Update a category
+### Update a category (ADMIN ONLY)
 PUT {{baseUrl}}/api/categories/{{categoryId}}
 Content-Type: application/json
+Authorization: Basic admin admin123
 
 {
   "name": "Friends",
   "description": "Weekend getaway with friends."
 }
 
-### Delete a category
+### Delete a category (ADMIN ONLY)
 DELETE {{baseUrl}}/api/categories/{{categoryId}}
+Authorization: Basic admin admin123

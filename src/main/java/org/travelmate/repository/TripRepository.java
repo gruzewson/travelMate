@@ -28,6 +28,14 @@ public class TripRepository {
                 .getResultList();
     }
 
+    public List<Trip> findByCategoryIdAndUserId(UUID categoryId, UUID userId) {
+        return em.createQuery(
+                "SELECT t FROM Trip t WHERE t.category.id = :categoryId AND t.user.id = :userId", Trip.class)
+                .setParameter("categoryId", categoryId)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
+
     public List<Trip> findByUserId(UUID userId) {
         return em.createQuery(
                 "SELECT t FROM Trip t WHERE t.user.id = :userId", Trip.class)

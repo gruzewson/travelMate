@@ -27,6 +27,10 @@ public class TripService {
         return tripRepository.findByCategoryId(categoryId);
     }
 
+    public List<Trip> findByCategoryIdAndUserId(UUID categoryId, UUID userId) {
+        return tripRepository.findByCategoryIdAndUserId(categoryId, userId);
+    }
+
     public List<Trip> findByUserId(UUID userId) {
         return tripRepository.findByUserId(userId);
     }

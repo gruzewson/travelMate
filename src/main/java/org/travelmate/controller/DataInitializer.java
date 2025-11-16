@@ -1,6 +1,7 @@
 package org.travelmate.controller;
 
 import jakarta.enterprise.inject.spi.CDI;
+import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
@@ -8,11 +9,14 @@ import org.travelmate.model.DestinationCategory;
 import org.travelmate.model.Trip;
 import org.travelmate.model.User;
 import org.travelmate.model.enums.TripStatus;
+import org.travelmate.model.enums.UserRole;
 import org.travelmate.service.DestinationCategoryService;
 import org.travelmate.service.TripService;
 import org.travelmate.service.UserService;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -25,12 +29,21 @@ public class DataInitializer implements ServletContextListener {
     private DestinationCategoryService categoryService;
     private TripService tripService;
     private UserService userService;
+    private Pbkdf2PasswordHash passwordHash;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         categoryService = CDI.current().select(DestinationCategoryService.class).get();
         tripService = CDI.current().select(TripService.class).get();
         userService = CDI.current().select(UserService.class).get();
+        passwordHash = CDI.current().select(Pbkdf2PasswordHash.class).get();
+
+        // Initialize password hash with parameters matching SecurityConfig
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("Pbkdf2PasswordHash.Iterations", "210000");
+        parameters.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA256");
+        parameters.put("Pbkdf2PasswordHash.SaltSizeBytes", "32");
+        passwordHash.initialize(parameters);
 
         if (!categoryService.findAll().isEmpty()) {
             System.out.println("Data already initialized, skipping initialization...");
@@ -39,10 +52,12 @@ public class DataInitializer implements ServletContextListener {
 
         System.out.println("Initializing application data...");
 
-        User john = createUser("john", LocalDate.of(1990, 5, 15));
-        User andrew = createUser("andrew", LocalDate.of(2000, 6, 16));
-        User mariusz = createUser("mariusz", LocalDate.of(2010, 7, 17));
-        User marcin = createUser("marcin", LocalDate.of(2020, 8, 18));
+        User admin = createUser("admin", "admin123", UserRole.ADMIN, LocalDate.of(1985, 1, 1));
+
+        User john = createUser("john", "john123", UserRole.USER, LocalDate.of(1990, 5, 15));
+        User andrew = createUser("andrew", "andrew123", UserRole.USER, LocalDate.of(2000, 6, 16));
+        User mariusz = createUser("mariusz", "mariusz123", UserRole.USER, LocalDate.of(2010, 7, 17));
+        User marcin = createUser("marcin", "marcin123", UserRole.USER, LocalDate.of(2020, 8, 18));
 
         DestinationCategory mountains = createCategory(
                 "Mountains",
@@ -105,12 +120,15 @@ public class DataInitializer implements ServletContextListener {
                 4500.0, TripStatus.COMPLETED, adventure, mariusz);
     }
 
-    private User createUser(String login, LocalDate dateOfBirth) {
+    private User createUser(String login, String plainPassword, UserRole role, LocalDate dateOfBirth) {
         User user = new User();
         user.setId(UUID.randomUUID());
         user.setLogin(login);
+        user.setPassword(passwordHash.generate(plainPassword.toCharArray()));
+        user.setRole(role);
         user.setDateOfBirth(dateOfBirth);
         userService.create(user);
+        System.out.println("Created user: " + login + " with role: " + role);
         return user;
     }
 
@@ -142,3 +160,4 @@ public class DataInitializer implements ServletContextListener {
         // Cleanup code if needed
     }
 }
+

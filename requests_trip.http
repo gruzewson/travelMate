@@ -1,28 +1,36 @@
 @baseUrl = http://localhost:9080
-@categoryId = ec24ab15-0f4e-41ed-945d-66834672eb5e
-@tripId = 3d645bbe-52d0-4a31-85c0-d92769aacc9f
+@categoryId = 5375325a-49c8-483e-b388-224066cf4663
+@tripId = b7ef7770-e63e-467a-9b11-b5762107834c
 
-### Get all trips for a category
+### Get all trips for a category (USER sees only theirs, ADMIN sees all)
 GET {{baseUrl}}/api/categories/{{categoryId}}/trips
+Authorization: Basic john john123
+
+### Get all trips as ADMIN (sees ALL trips)
+GET {{baseUrl}}/api/categories/{{categoryId}}/trips
+Authorization: Basic admin admin123
 
 ### Get a trip by ID in a category
 GET {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}
+Authorization: Basic john john123
 
-### Create a new trip in a category
+### Create a new trip in a category (owner auto-set)
 POST {{baseUrl}}/api/categories/{{categoryId}}/trips
 Content-Type: application/json
+Authorization: Basic john john123
 
 {
-  "title": "Family Vacation",
+  "title": "John's Family Vacation",
   "startDate": "2025-06-01",
   "endDate": "2025-06-14",
   "estimatedCost": 2500.0,
   "status": "PLANNED"
 }
 
-### Update a trip
+### Update a trip (own trip)
 PUT {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}
 Content-Type: application/json
+Authorization: Basic john john123
 
 {
   "title": "Updated Trip Title",
@@ -32,5 +40,10 @@ Content-Type: application/json
   "status": "COMPLETED"
 }
 
-### Delete a trip
+### Delete a trip (own trip)
 DELETE {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}
+Authorization: Basic john john123
+
+### Admin can delete any trip
+DELETE {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}
+Authorization: Basic admin admin123
