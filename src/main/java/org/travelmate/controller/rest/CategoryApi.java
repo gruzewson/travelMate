@@ -20,14 +20,14 @@ public class CategoryApi {
     private DestinationCategoryService categoryService;
 
     @GET
-    @PermitAll
+    @RolesAllowed({"ADMIN", "USER"})
     public Response getAll() {
         return Response.ok(categoryService.findAll()).build();
     }
 
     @GET
     @Path("/{id}")
-    @PermitAll
+    @RolesAllowed({"ADMIN", "USER"})
     public Response getOne(@PathParam("id") UUID id) {
         return categoryService.find(id)
                 .map(c -> Response.ok(c).build())

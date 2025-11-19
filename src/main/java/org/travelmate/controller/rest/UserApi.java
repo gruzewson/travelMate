@@ -45,7 +45,19 @@ public class UserApi {
     @RolesAllowed({"ADMIN", "USER"})
     public Response getOne(@PathParam("id") UUID id) {
         return userService.find(id)
-                .map(u -> Response.ok(u).build())
+                .map(user -> {
+                    // Check if user has permission to view this user
+                    if (!securityContext.isUserInRole("ADMIN")) {
+                        String login = securityContext.getUserPrincipal().getName();
+                        User currentUser = userService.findByLogin(login)
+                                .orElseThrow(() -> new ForbiddenException("User not found"));
+
+                        if (!user.getId().equals(currentUser.getId())) {
+                            throw new ForbiddenException("You can only view your own profile");
+                        }
+                    }
+                    return Response.ok(user).build();
+                })
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
@@ -56,6 +68,18 @@ public class UserApi {
         if (userService.find(id).isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        // Check if user has permission to view trips for this user
+        if (!securityContext.isUserInRole("ADMIN")) {
+            String login = securityContext.getUserPrincipal().getName();
+            User currentUser = userService.findByLogin(login)
+                    .orElseThrow(() -> new ForbiddenException("User not found"));
+
+            if (!id.equals(currentUser.getId())) {
+                throw new ForbiddenException("You can only view your own trips");
+            }
+        }
+
         return Response.ok(tripService.findByUserId(id)).build();
     }
 
@@ -90,7 +114,6 @@ public class UserApi {
 
         userService.create(user);
 
-        user.setPassword(null);
         return Response.status(Response.Status.CREATED).entity(user).build();
     }
 

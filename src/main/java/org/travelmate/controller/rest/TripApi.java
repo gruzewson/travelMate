@@ -93,12 +93,20 @@ public class TripApi {
                         User currentUser = userService.findByLogin(login)
                                 .orElseThrow(() -> new ForbiddenException("User not found"));
                         trip.setUser(currentUser);
-                    } else if (trip.getUser() == null) {
-                        // Admin must specify user or it will be null
-                        String login = securityContext.getUserPrincipal().getName();
-                        User currentUser = userService.findByLogin(login)
-                                .orElseThrow(() -> new ForbiddenException("User not found"));
-                        trip.setUser(currentUser);
+                    } else {
+                        // Admin can specify user in request, or it defaults to admin
+                        if (trip.getUser() != null && trip.getUser().getId() != null) {
+                            // Verify that the specified user exists
+                            User specifiedUser = userService.find(trip.getUser().getId())
+                                    .orElseThrow(() -> new BadRequestException("Specified user not found"));
+                            trip.setUser(specifiedUser);
+                        } else {
+                            // If no user specified, set admin as owner
+                            String login = securityContext.getUserPrincipal().getName();
+                            User currentUser = userService.findByLogin(login)
+                                    .orElseThrow(() -> new ForbiddenException("User not found"));
+                            trip.setUser(currentUser);
+                        }
                     }
 
                     tripService.create(trip);
