@@ -117,16 +117,6 @@ public class UserApi {
         return Response.status(Response.Status.CREATED).entity(user).build();
     }
 
-    @POST
-    @RolesAllowed("ADMIN")
-    public Response create(User user) {
-        if (user.getId() == null) {
-            user.setId(UUID.randomUUID());
-        }
-        userService.create(user);
-        return Response.status(Response.Status.CREATED).entity(user).build();
-    }
-
     @PUT
     @Path("/{id}")
     @RolesAllowed("ADMIN")

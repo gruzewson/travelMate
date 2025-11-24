@@ -1,0 +1,102 @@
+@baseUrl = http://localhost:9080
+@categoryId = feefbb1f-710e-4022-87a7-5d921153c136
+@tripId = fe0b9869-7353-4e5a-a930-09201720ef00
+
+### Create a new category (ADMIN ONLY)
+# @no-cookie-jar
+POST {{baseUrl}}/api/categories
+Content-Type: application/json
+Authorization: Basic admin admin123
+
+{
+  "name": "Family Vacation",
+  "description": "Two-week family trip to the coast."
+}
+
+### Delete a category (ADMIN ONLY)
+# @no-cookie-jar
+DELETE {{baseUrl}}/api/categories/{{categoryId}}
+Authorization: Basic admin admin123
+
+### Get all categories (authenticated user john)
+# @no-cookie-jar
+GET {{baseUrl}}/api/categories
+Authorization: Basic john john123
+
+### Register a new user (NO AUTH REQUIRED)
+# @no-cookie-jar
+POST {{baseUrl}}/api/users/register
+Content-Type: application/json
+
+{
+  "login": "newuser",
+  "password": "newuser123",
+  "dateOfBirth": "1995-03-20"
+}
+
+### Get all trips as ADMIN (sees ALL trips)
+# @no-cookie-jar
+GET {{baseUrl}}/api/categories/{{categoryId}}/trips
+Authorization: Basic admin admin123
+
+### Get all trips for a user (USER sees only theirs, ADMIN sees all)
+# @no-cookie-jar
+GET {{baseUrl}}/api/categories/{{categoryId}}/trips
+Authorization: Basic john john123
+
+### Update a trip
+# @no-cookie-jar
+PUT {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}
+Content-Type: application/json
+Authorization: Basic admin admin123
+
+{
+  "title": "Updated Trip Title",
+  "startDate": "2024-06-01",
+  "endDate": "2024-06-14",
+  "estimatedCost": 600.0,
+  "status": "COMPLETED"
+}
+
+### Admin can delete any trip
+# @no-cookie-jar
+DELETE {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}
+Authorization: Basic admin admin123
+
+### Update a trip (own trip)
+# @no-cookie-jar
+PUT {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}
+Content-Type: application/json
+Authorization: Basic john john123
+
+{
+  "title": "Updated Trip Title",
+  "startDate": "2024-06-01",
+  "endDate": "2024-06-14",
+  "estimatedCost": 600.0,
+  "status": "COMPLETED"
+}
+
+### Delete a trip (own trip)
+# @no-cookie-jar
+DELETE {{baseUrl}}/api/categories/{{categoryId}}/trips/{{tripId}}
+Authorization: Basic john john123
+
+### Create a new trip in a category (owner auto-set)
+# @no-cookie-jar
+POST {{baseUrl}}/api/categories/{{categoryId}}/trips
+Content-Type: application/json
+Authorization: Basic john john123
+
+{
+  "title": "John's Family Vacation",
+  "startDate": "2025-06-01",
+  "endDate": "2025-06-14",
+  "estimatedCost": 2500.0,
+  "status": "PLANNED"
+}
+
+
+
+
+

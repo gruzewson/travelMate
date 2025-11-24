@@ -1,7 +1,8 @@
 @baseUrl = http://localhost:9080
-@userId = 7de5816e-19a8-4f8b-8c32-667caf59b0da
+@userId = 6e3c23b9-9926-4542-bc0e-e8c8c935fa77
 
 ### Register a new user (NO AUTH REQUIRED)
+# @no-cookie-jar
 POST {{baseUrl}}/api/users/register
 Content-Type: application/json
 
@@ -12,18 +13,22 @@ Content-Type: application/json
 }
 
 ### Get all users (ADMIN ONLY)
+# @no-cookie-jar
 GET {{baseUrl}}/api/users
 Authorization: Basic admin admin123
 
 ### Gets a user by their ID
+# @no-cookie-jar
 GET {{baseUrl}}/api/users/{{userId}}
 Authorization: Basic john john123
 
 ### Get trips for a specific user
+# @no-cookie-jar
 GET {{baseUrl}}/api/users/{{userId}}/trips
 Authorization: Basic john john123
 
 ### Update a user (ADMIN ONLY)
+# @no-cookie-jar
 PUT {{baseUrl}}/api/users/{{userId}}
 Content-Type: application/json
 Authorization: Basic admin admin123
@@ -34,6 +39,7 @@ Authorization: Basic admin admin123
 }
 
 ### Deletes a user (ADMIN ONLY)
+# @no-cookie-jar
 DELETE {{baseUrl}}/api/users/{{userId}}
 Authorization: Basic admin admin123
 

@@ -2,18 +2,22 @@
 @categoryId = c2ac24ab-a565-4a55-936c-25ffbec7dc32
 
 ### Get all categories (authenticated user john)
+# @no-cookie-jar
 GET {{baseUrl}}/api/categories
 Authorization: Basic john john123
 
 ### Get all categories (authenticated user admin)
+# @no-cookie-jar
 GET {{baseUrl}}/api/categories
 Authorization: Basic admin admin123
 
 ### Get a category by ID (authenticated user)
+# @no-cookie-jar
 GET {{baseUrl}}/api/categories/{{categoryId}}
 Authorization: Basic john john123
 
 ### Create a new category (ADMIN ONLY)
+# @no-cookie-jar
 POST {{baseUrl}}/api/categories
 Content-Type: application/json
 Authorization: Basic admin admin123
@@ -24,6 +28,7 @@ Authorization: Basic admin admin123
 }
 
 ### Update a category (ADMIN ONLY)
+# @no-cookie-jar
 PUT {{baseUrl}}/api/categories/{{categoryId}}
 Content-Type: application/json
 Authorization: Basic admin admin123
@@ -34,5 +39,6 @@ Authorization: Basic admin admin123
 }
 
 ### Delete a category (ADMIN ONLY)
+# @no-cookie-jar
 DELETE {{baseUrl}}/api/categories/{{categoryId}}
 Authorization: Basic admin admin123
