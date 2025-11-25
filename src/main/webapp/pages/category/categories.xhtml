@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:ui="jakarta.faces.facelets">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core"
+    xmlns:ui="jakarta.faces.facelets">
 
 <ui:composition template="/templates/template.xhtml">
 
@@ -15,47 +13,53 @@
             </header>
 
             <section>
-                <h:form>
-                    <h:messages globalOnly="true" styleClass="messages" />
+                <h:form id="categoryForm">
+                    <h:messages id="messages" globalOnly="true" styleClass="messages" />
 
-                    <h:dataTable value="#{categoryViewBean.allCategories}" var="category" styleClass="table"
-                                 headerClass="table-header" rowClasses="table-odd-row,table-even-row"
-                                 rendered="#{not empty categoryViewBean.allCategories}">
+                    <h:panelGroup id="categoryTablePanel">
+                        <h:dataTable value="#{categoryViewBean.allCategories}" var="category" styleClass="table"
+                            headerClass="table-header" rowClasses="table-odd-row,table-even-row"
+                            rendered="#{not empty categoryViewBean.allCategories}">
 
-                        <h:column>
-                            <f:facet name="header">#{msg['categories.name']}</f:facet>
-                            #{category.name}
-                        </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msg['categories.name']}</f:facet>
+                                #{category.name}
+                            </h:column>
 
-                        <h:column>
-                            <f:facet name="header">#{msg['categories.description']}</f:facet>
-                            #{category.description}
-                        </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msg['categories.description']}</f:facet>
+                                #{category.description}
+                            </h:column>
 
-                        <h:column>
-                            <f:facet name="header">#{msg['categories.tripCount']}</f:facet>
-                            #{categoryViewBean.getTripCount(category.id)}
-                        </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msg['categories.tripCount']}</f:facet>
+                                #{categoryViewBean.getTripCount(category.id)}
+                            </h:column>
 
-                        <h:column>
-                            <f:facet name="header">#{msg['categories.actions']}</f:facet>
+                            <h:column>
+                                <f:facet name="header">#{msg['categories.actions']}</f:facet>
 
-                            <h:link value="#{msg['categories.showDetails']}" outcome="/pages/category/category-view" styleClass="button-link"
-                                    style="margin-right: 10px;">
-                                <f:param name="id" value="#{category.id}" />
-                            </h:link>
+                                <h:link value="#{msg['categories.showDetails']}" outcome="/pages/category/category-view"
+                                    styleClass="button-link" style="margin-right: 10px;">
+                                    <f:param name="id" value="#{category.id}" />
+                                </h:link>
 
-                            <h:commandButton value="#{msg['categories.delete']}"
-                                             action="#{categoryViewBean.deleteCategory(category.id)}"
-                                             onclick="return confirm('#{msg['categories.deleteConfirm']}');"
-                                             rendered="#{authBean.admin}" />
-                        </h:column>
+                                <h:commandButton value="#{msg['categories.delete']}"
+                                    action="#{categoryViewBean.deleteCategory(category.id)}"
+                                    onclick="return confirm(this.getAttribute('data-confirm'));"
+                                    rendered="#{authBean.admin}">
+                                    <f:passThroughAttribute name="data-confirm"
+                                        value="#{msg['categories.deleteConfirm']}" />
+                                    <f:ajax execute="@form" render="categoryTablePanel messages" />
+                                </h:commandButton>
+                            </h:column>
 
-                    </h:dataTable>
+                        </h:dataTable>
 
-                    <h:outputText value="#{msg['categories.empty']}"
-                                  rendered="#{empty categoryViewBean.allCategories}"
-                                  style="display: block; margin: 20px 0; font-style: italic; color: #666;" />
+                        <h:outputText value="#{msg['categories.empty']}"
+                            rendered="#{empty categoryViewBean.allCategories}"
+                            style="display: block; margin: 20px 0; font-style: italic; color: #666;" />
+                    </h:panelGroup>
                 </h:form>
             </section>
         </article>
@@ -63,5 +67,5 @@
     </ui:define>
 
 </ui:composition>
-</html>
 
+</html>

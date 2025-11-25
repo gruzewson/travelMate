@@ -26,8 +26,17 @@ public class CategoryViewBean implements Serializable {
     @Inject
     private TripService tripService;
 
+    private List<DestinationCategory> cachedCategories;
+
     public List<DestinationCategory> getAllCategories() {
-        return categoryService.findAll();
+        if (cachedCategories == null) {
+            cachedCategories = categoryService.findAll();
+        }
+        return cachedCategories;
+    }
+
+    public void refreshCategories() {
+        cachedCategories = categoryService.findAll();
     }
 
     public Map<UUID, List<Trip>> getTripsByCategory() {
@@ -43,20 +52,14 @@ public class CategoryViewBean implements Serializable {
                 .count();
     }
 
-    public String deleteCategory(UUID categoryId) {
+    public void deleteCategory(UUID categoryId) {
         categoryService.find(categoryId).ifPresent(category -> {
             categoryService.delete(categoryId);
-
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Category has been deleted", null));
+            refreshCategories();
         });
-        return "/pages/category/categories?faces-redirect=true";
     }
 
-    public String deleteTrip(UUID tripId, UUID categoryId) {
+    public void deleteTrip(UUID tripId) {
         tripService.delete(tripId);
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Trip has been deleted", null));
-        return "/pages/category/category-view?faces-redirect=true&id=" + categoryId;
     }
 }

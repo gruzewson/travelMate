@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:ui="jakarta.faces.facelets">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core"
+    xmlns:ui="jakarta.faces.facelets">
 
 <ui:composition template="/templates/template.xhtml">
     <f:metadata>
@@ -39,70 +37,80 @@
                     </h:link>
                 </div>
 
-                <h:form rendered="#{not empty categoryDetailBean.trips}">
-                    <h:dataTable value="#{categoryDetailBean.trips}" var="trip" styleClass="table"
-                                 headerClass="table-header" rowClasses="table-odd-row,table-even-row">
+                <h:form id="tripForm">
+                    <h:messages id="messages" globalOnly="true" styleClass="messages" />
 
-                        <h:column>
-                            <f:facet name="header">#{msg['trip.title']}</f:facet>
-                            #{trip.title}
-                        </h:column>
+                    <h:panelGroup id="tripTablePanel">
+                        <h:dataTable value="#{categoryDetailBean.trips}" var="trip" styleClass="table"
+                            headerClass="table-header" rowClasses="table-odd-row,table-even-row"
+                            rendered="#{not empty categoryDetailBean.trips}">
 
-                        <h:column>
-                            <f:facet name="header">#{msg['trip.startDate']}</f:facet>
-                            <h:outputText value="#{trip.startDate}">
-                                <f:convertDateTime pattern="dd-MM-yyyy" type="localDate"/>
-                            </h:outputText>
-                        </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msg['trip.title']}</f:facet>
+                                #{trip.title}
+                            </h:column>
 
-                        <h:column>
-                            <f:facet name="header">#{msg['trip.endDate']}</f:facet>
-                            <h:outputText value="#{trip.endDate}">
-                                <f:convertDateTime pattern="dd-MM-yyyy" type="localDate"/>
-                            </h:outputText>
-                        </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msg['trip.startDate']}</f:facet>
+                                <h:outputText value="#{trip.startDate}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy" type="localDate" />
+                                </h:outputText>
+                            </h:column>
 
-                        <h:column>
-                            <f:facet name="header">#{msg['trip.cost']}</f:facet>
-                            <h:outputText value="#{trip.estimatedCost}">
-                                <f:convertNumber type="currency" currencySymbol="PLN " />
-                            </h:outputText>
-                        </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msg['trip.endDate']}</f:facet>
+                                <h:outputText value="#{trip.endDate}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy" type="localDate" />
+                                </h:outputText>
+                            </h:column>
 
-                        <h:column>
-                            <f:facet name="header">#{msg['trip.status']}</f:facet>
-                            #{trip.status}
-                        </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msg['trip.cost']}</f:facet>
+                                <h:outputText value="#{trip.estimatedCost}">
+                                    <f:convertNumber type="currency" currencySymbol="PLN " />
+                                </h:outputText>
+                            </h:column>
 
-                        <h:column rendered="#{authBean.admin}">
-                            <f:facet name="header">#{msg['trip.owner']}</f:facet>
-                            #{trip.user.login}
-                        </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msg['trip.status']}</f:facet>
+                                #{trip.status}
+                            </h:column>
 
-                        <h:column>
-                            <f:facet name="header">#{msg['trip.actions']}</f:facet>
+                            <h:column rendered="#{authBean.admin}">
+                                <f:facet name="header">#{msg['trip.owner']}</f:facet>
+                                #{trip.user.login}
+                            </h:column>
 
-                            <h:link value="#{msg['trip.show']}" outcome="/pages/trip/trip-view" style="margin-right: 10px;">
-                                <f:param name="id" value="#{trip.id}" />
-                            </h:link>
+                            <h:column>
+                                <f:facet name="header">#{msg['trip.actions']}</f:facet>
 
-                            <h:link value="#{msg['trip.edit']}" outcome="/pages/trip/trip-edit" style="margin-right: 10px;">
-                                <f:param name="id" value="#{trip.id}" />
-                                <f:param name="categoryId" value="#{categoryDetailBean.categoryId}" />
-                            </h:link>
+                                <h:link value="#{msg['trip.show']}" outcome="/pages/trip/trip-view"
+                                    style="margin-right: 10px;">
+                                    <f:param name="id" value="#{trip.id}" />
+                                </h:link>
 
-                            <h:commandButton value="#{msg['trip.delete']}"
-                                             action="#{categoryViewBean.deleteTrip(trip.id, categoryDetailBean.categoryId)}"
-                                             onclick="return confirm('#{msg['trip.deleteConfirm']}');"
-                                             rendered="#{authBean.admin or (trip.user.id eq authBean.currentUser.id)}" />
-                        </h:column>
+                                <h:link value="#{msg['trip.edit']}" outcome="/pages/trip/trip-edit"
+                                    style="margin-right: 10px;">
+                                    <f:param name="id" value="#{trip.id}" />
+                                    <f:param name="categoryId" value="#{categoryDetailBean.categoryId}" />
+                                </h:link>
 
-                    </h:dataTable>
+                                <h:commandButton value="#{msg['trip.delete']}"
+                                    action="#{categoryDetailBean.deleteTrip(trip.id)}"
+                                    onclick="return confirm(this.getAttribute('data-confirm'));"
+                                    rendered="#{authBean.admin or (trip.user.id eq authBean.currentUser.id)}">
+                                    <f:passThroughAttribute name="data-confirm" value="#{msg['trip.deleteConfirm']}" />
+                                    <f:ajax execute="@form" render="tripTablePanel messages" />
+                                </h:commandButton>
+                            </h:column>
+
+                        </h:dataTable>
+
+                        <h:panelGroup rendered="#{empty categoryDetailBean.trips}">
+                            <p style="font-style: italic; color: #666;">#{msg['category.noTrips']}</p>
+                        </h:panelGroup>
+                    </h:panelGroup>
                 </h:form>
-
-                <h:panelGroup rendered="#{empty categoryDetailBean.trips}">
-                    <p style="font-style: italic; color: #666;">#{msg['category.noTrips']}</p>
-                </h:panelGroup>
 
             </section>
 
@@ -114,5 +122,5 @@
     </ui:define>
 
 </ui:composition>
-</html>
 
+</html>

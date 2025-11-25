@@ -1,5 +1,6 @@
 package org.travelmate.controller.viewbean;
 
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -75,5 +76,30 @@ public class CategoryDetailBean implements Serializable {
                         .toList();
             }
         }
+    }
+
+    public void refreshTrips() {
+        if (categoryId != null) {
+            User currentUser = authBean.getCurrentUser();
+            if (authBean.isAdmin()) {
+                trips = tripService.findAll().stream()
+                        .filter(trip -> trip.getCategory() != null &&
+                                trip.getCategory().getId().equals(categoryId))
+                        .toList();
+            } else {
+                trips = tripService.findAll().stream()
+                        .filter(trip -> trip.getCategory() != null &&
+                                trip.getCategory().getId().equals(categoryId) &&
+                                trip.getUser() != null &&
+                                currentUser != null &&
+                                trip.getUser().getId().equals(currentUser.getId()))
+                        .toList();
+            }
+        }
+    }
+
+    public void deleteTrip(UUID tripId) {
+        tripService.delete(tripId);
+        refreshTrips();
     }
 }
