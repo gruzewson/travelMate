@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html lang="en"
+<html lang="#{facesContext.viewRoot.locale.language}"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
@@ -10,9 +10,19 @@
     <h:head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>TravelMate - Trip Planner</title>
+        <title>#{msg['app.title']} - Trip Planner</title>
 
         <h:outputStylesheet library="css" name="style.css"/>
+
+        <!-- Dynamic banner image based on locale -->
+        <style>
+            .header {
+                background:
+                    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                    url("#{request.contextPath}/images/banner_#{facesContext.viewRoot.locale.language}.jpg") center/cover no-repeat !important;
+                background-color: #003366;
+            }
+        </style>
     </h:head>
 
     <h:body>
@@ -21,20 +31,20 @@
             <div style="display: flex; justify-content: space-between; align-items: center; position: relative;">
                 <div style="flex: 1;"></div>
                 <div style="flex: 1; text-align: center;">
-                    <h1 style="margin: 0;">TravelMate</h1>
-                    <p style="margin: 5px 0 0 0;">Your personal travel assistant</p>
+                    <h1 style="margin: 0;">#{msg['app.title']}</h1>
+                    <p style="margin: 5px 0 0 0;">#{msg['app.tagline']}</p>
                 </div>
                 <div style="flex: 1; text-align: right; color: white;">
                     <h:panelGroup rendered="#{authBean.loggedIn}">
                         <p style="margin: 5px 0; font-size: 0.9em;">
-                            Logged in as: <strong>#{authBean.username}</strong>
+                            #{msg['user.loggedAs']} <strong>#{authBean.username}</strong>
                             <br/>
                             <span style="font-size: 0.85em;">
-                                (#{authBean.admin ? 'Administrator' : 'User'})
+                                (#{authBean.admin ? msg['user.role.admin'] : msg['user.role.user']})
                             </span>
                         </p>
                         <h:form style="display: inline;">
-                            <h:commandButton value="Logout" actionListener="#{authBean.logout}" immediate="true"
+                            <h:commandButton value="#{msg['user.logout']}" actionListener="#{authBean.logout}" immediate="true"
                                          style="background: none; border: none; color: #ffeb3b; text-decoration: underline; cursor: pointer; font-size: 0.9em; padding: 0;"/>
                         </h:form>
                     </h:panelGroup>
@@ -43,24 +53,24 @@
         </header>
         <nav class="nav">
             <ul>
-                <li><h:link outcome="/pages/category/categories" value="Categories"/></li>
+                <li><h:link outcome="/pages/category/categories" value="#{msg['nav.categories']}"/></li>
             </ul>
         </nav>
 
         <main class="content">
             <ui:insert name="content">
                 <article>
-                    <header><h2>Welcome to TravelMate!</h2></header>
+                    <header><h2>#{msg['welcome.title']}</h2></header>
                     <section>
-                        <p>Start planning your trips by browsing available categories.</p>
+                        <p>#{msg['welcome.description']}</p>
                     </section>
                 </article>
             </ui:insert>
         </main>
 
         <footer class="footer">
-            <p>2025 Gdansk University of Technology</p>
-            <p>Jakarta EE Project - JEE Laboratory</p>
+            <p>#{msg['footer.year']} #{msg['footer.university']}</p>
+            <p>#{msg['footer.project']}</p>
         </footer>
 
     </h:body>

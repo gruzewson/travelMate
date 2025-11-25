@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.travelmate.model.User;
 import org.travelmate.service.UserService;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.security.Principal;
 
@@ -72,14 +71,21 @@ public class AuthBean implements Serializable {
             // Clear cached user
             currentUser = null;
 
+            // Clear transient fields
+            securityContext = null;
+            userService = null;
+
             // Logout from security context
             request.logout();
 
-            // Invalidate session
+            // Redirect BEFORE invalidating session
+            String contextPath = externalContext.getRequestContextPath();
+
+            // Invalidate session AFTER getting context path
             externalContext.invalidateSession();
 
-            // Redirect to login page
-            externalContext.redirect(externalContext.getRequestContextPath() + "/login.xhtml");
+            // Now redirect
+            externalContext.redirect(contextPath + "/login.xhtml");
             facesContext.responseComplete();
         } catch (Exception e) {
             e.printStackTrace();

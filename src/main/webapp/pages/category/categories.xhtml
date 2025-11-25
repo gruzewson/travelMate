@@ -11,7 +11,7 @@
 
         <article>
             <header>
-                <h2>Category Management</h2>
+                <h2>#{msg['categories.title']}</h2>
             </header>
 
             <section>
@@ -23,37 +23,37 @@
                                  rendered="#{not empty categoryViewBean.allCategories}">
 
                         <h:column>
-                            <f:facet name="header">Category Name</f:facet>
+                            <f:facet name="header">#{msg['categories.name']}</f:facet>
                             #{category.name}
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Description</f:facet>
+                            <f:facet name="header">#{msg['categories.description']}</f:facet>
                             #{category.description}
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Number of Trips</f:facet>
+                            <f:facet name="header">#{msg['categories.tripCount']}</f:facet>
                             #{categoryViewBean.getTripCount(category.id)}
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Actions</f:facet>
+                            <f:facet name="header">#{msg['categories.actions']}</f:facet>
 
-                            <h:link value="Show Details" outcome="/pages/category/category-view" styleClass="button-link"
+                            <h:link value="#{msg['categories.showDetails']}" outcome="/pages/category/category-view" styleClass="button-link"
                                     style="margin-right: 10px;">
                                 <f:param name="id" value="#{category.id}" />
                             </h:link>
 
-                            <h:commandButton value="Delete (with trips)"
+                            <h:commandButton value="#{msg['categories.delete']}"
                                              action="#{categoryViewBean.deleteCategory(category.id)}"
-                                             onclick="return confirm('Are you sure you want to delete this category and all its trips?');"
+                                             onclick="return confirm('#{msg['categories.deleteConfirm']}');"
                                              rendered="#{authBean.admin}" />
                         </h:column>
 
                     </h:dataTable>
 
-                    <h:outputText value="No categories in the system."
+                    <h:outputText value="#{msg['categories.empty']}"
                                   rendered="#{empty categoryViewBean.allCategories}"
                                   style="display: block; margin: 20px 0; font-style: italic; color: #666;" />
                 </h:form>

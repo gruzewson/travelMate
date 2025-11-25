@@ -11,7 +11,7 @@ import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
     loginToContinue = @LoginToContinue(
         loginPage = "/login.xhtml",
         errorPage = "/login.xhtml?error=true",
-        useForwardToLogin = false
+        useForwardToLoginExpression = "${false}"
     )
 )
 @DatabaseIdentityStoreDefinition(

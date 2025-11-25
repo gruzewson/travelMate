@@ -21,10 +21,7 @@ body {
     color: #fff;
     text-align: center;
     padding: 6rem 1rem; /* large hero spacing */
-    background:
-            linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-            url("../../images/banner.jpg") center/cover no-repeat;
-    /* fallback gradient if image unavailable */
+    /* Background will be set dynamically in template based on locale */
     background-color: #003366;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     border-bottom: 4px solid #003366;
