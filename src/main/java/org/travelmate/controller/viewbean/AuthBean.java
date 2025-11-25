@@ -84,8 +84,9 @@ public class AuthBean implements Serializable {
             // Invalidate session
             externalContext.invalidateSession();
 
-            // Redirect to login page with faces-redirect to avoid j_security_check issue
-            externalContext.redirect(contextPath + "/login.xhtml?faces-redirect=true");
+            // Redirect to protected page - this will trigger automatic redirect to login
+            // This avoids the j_security_check gray screen issue
+            externalContext.redirect(contextPath + "/pages/category/categories.xhtml");
             facesContext.responseComplete();
         } catch (Exception e) {
             e.printStackTrace();

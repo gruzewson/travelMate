@@ -135,7 +135,7 @@
                 </div>
             </h:panelGroup>
 
-            <form method="POST" action="j_security_check">
+            <form method="POST" action="#{request.contextPath}/j_security_check">
                 <div class="form-group">
                     <label for="j_username">
                         <h:outputText value="#{msg['login.username']}" />
