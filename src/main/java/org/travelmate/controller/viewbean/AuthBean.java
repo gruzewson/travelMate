@@ -78,14 +78,14 @@ public class AuthBean implements Serializable {
             // Logout from security context
             request.logout();
 
-            // Redirect BEFORE invalidating session
+            // Get context path BEFORE invalidating session
             String contextPath = externalContext.getRequestContextPath();
 
-            // Invalidate session AFTER getting context path
+            // Invalidate session
             externalContext.invalidateSession();
 
-            // Now redirect
-            externalContext.redirect(contextPath + "/login.xhtml");
+            // Redirect to login page with faces-redirect to avoid j_security_check issue
+            externalContext.redirect(contextPath + "/login.xhtml?faces-redirect=true");
             facesContext.responseComplete();
         } catch (Exception e) {
             e.printStackTrace();

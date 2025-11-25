@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html lang="en"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
+<html lang="#{localeBean.language}" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
 
-<f:view>
+<f:view locale="#{localeBean.currentLocale}">
     <h:head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TravelMate - Login</title>
-        <h:outputStylesheet library="css" name="style.css"/>
+        <h:outputStylesheet library="css" name="style.css" />
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -22,48 +20,57 @@
                 align-items: center;
                 justify-content: center;
             }
+
             .login-container {
                 max-width: 400px;
                 margin: 100px auto;
                 padding: 30px;
                 background: white;
                 border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             }
+
             .login-header {
                 text-align: center;
                 margin-bottom: 30px;
             }
+
             .login-header h2 {
                 margin: 0;
                 font-size: 24px;
                 color: #333;
             }
+
             .login-header p {
                 margin: 5px 0 0;
                 color: #666;
                 font-size: 14px;
             }
+
             .login-form {
                 display: flex;
                 flex-direction: column;
                 gap: 15px;
             }
+
             .form-group {
                 display: flex;
                 flex-direction: column;
                 gap: 5px;
             }
+
             .form-group label {
                 font-weight: bold;
                 color: #333;
             }
+
             .form-group input {
                 padding: 10px;
                 border: 1px solid #ddd;
                 border-radius: 4px;
                 font-size: 14px;
             }
+
             .login-button {
                 padding: 12px;
                 background: #007bff;
@@ -74,9 +81,11 @@
                 cursor: pointer;
                 margin-top: 10px;
             }
+
             .login-button:hover {
                 background: #0056b3;
             }
+
             .error-message {
                 color: #d32f2f;
                 padding: 10px;
@@ -84,12 +93,14 @@
                 border-radius: 4px;
                 margin-bottom: 15px;
             }
+
             .demo-info {
                 margin-top: 20px;
                 text-align: center;
                 color: #666;
                 font-size: 14px;
             }
+
             .demo-info p {
                 margin: 5px 0;
             }
@@ -98,38 +109,70 @@
 
     <h:body>
         <div class="login-container">
+            <!-- Language Switcher -->
+            <div style="text-align: right; margin-bottom: 15px;">
+                <h:form style="display: inline;">
+                    <h:commandButton value="#{msg['lang.polish']}" action="#{localeBean.switchToPolish()}"
+                        style="background: #{localeBean.polish ? '#007bff' : 'transparent'}; border: 1px solid #007bff; color: #{localeBean.polish ? 'white' : '#007bff'}; padding: 5px 10px; margin-right: 5px; cursor: pointer; border-radius: 3px; font-weight: #{localeBean.polish ? 'bold' : 'normal'};" />
+                    <h:commandButton value="#{msg['lang.english']}" action="#{localeBean.switchToEnglish()}"
+                        style="background: #{localeBean.english ? '#007bff' : 'transparent'}; border: 1px solid #007bff; color: #{localeBean.english ? 'white' : '#007bff'}; padding: 5px 10px; cursor: pointer; border-radius: 3px; font-weight: #{localeBean.english ? 'bold' : 'normal'};" />
+                </h:form>
+            </div>
+
             <div class="login-header">
-                <h2><h:outputText value="#{msg['app.title']}" /></h2>
-                <p><h:outputText value="#{msg['app.tagline']}" /></p>
+                <h2>
+                    <h:outputText value="#{msg['app.title']}" />
+                </h2>
+                <p>
+                    <h:outputText value="#{msg['app.tagline']}" />
+                </p>
             </div>
 
             <h:panelGroup rendered="#{param['error'] != null}">
                 <div class="error-message">
-                    ❌ <h:outputText value="#{msg['login.error']}" />
+                    ❌
+                    <h:outputText value="#{msg['login.error']}" />
                 </div>
             </h:panelGroup>
 
-            <form method="POST" action="j_security_check" class="login-form">
+            <form method="POST" action="j_security_check">
                 <div class="form-group">
-                    <label for="j_username"><h:outputText value="#{msg['login.username']}" /></label>
-                    <input type="text" id="j_username" name="j_username" required="required" autofocus="autofocus" autocomplete="username"/>
+                    <label for="j_username">
+                        <h:outputText value="#{msg['login.username']}" />
+                    </label>
+                    <input type="text" id="j_username" name="j_username" required="required" autofocus="autofocus"
+                        autocomplete="username" />
                 </div>
 
                 <div class="form-group">
-                    <label for="j_password"><h:outputText value="#{msg['login.password']}" /></label>
-                    <input type="password" id="j_password" name="j_password" required="required" autocomplete="current-password"/>
+                    <label for="j_password">
+                        <h:outputText value="#{msg['login.password']}" />
+                    </label>
+                    <input type="password" id="j_password" name="j_password" required="required"
+                        autocomplete="current-password" />
                 </div>
 
-                <button type="submit" class="login-button"><h:outputText value="#{msg['login.button']}" /></button>
+                <button type="submit" class="login-button">
+                    <h:outputText value="#{msg['login.button']}" />
+                </button>
             </form>
 
             <div class="demo-info">
-                <p><strong><h:outputText value="#{msg['login.demo.title']}" /></strong></p>
-                <p>👤 <h:outputText value="#{msg['login.demo.admin']}" /></p>
-                <p>👤 <h:outputText value="#{msg['login.demo.user1']}" /></p>
-                <p>👤 <h:outputText value="#{msg['login.demo.user2']}" /></p>
+                <p><strong>
+                        <h:outputText value="#{msg['login.demo.title']}" />
+                    </strong></p>
+                <p>👤
+                    <h:outputText value="#{msg['login.demo.admin']}" />
+                </p>
+                <p>👤
+                    <h:outputText value="#{msg['login.demo.user1']}" />
+                </p>
+                <p>👤
+                    <h:outputText value="#{msg['login.demo.user2']}" />
+                </p>
             </div>
         </div>
     </h:body>
 </f:view>
+
 </html>

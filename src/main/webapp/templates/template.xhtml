@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html lang="#{facesContext.viewRoot.locale.language}"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:ui="jakarta.faces.facelets">
+<html lang="#{localeBean.language}" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets">
 
-<f:view>
+<f:view locale="#{localeBean.currentLocale}">
     <h:head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>#{msg['app.title']} - Trip Planner</title>
 
-        <h:outputStylesheet library="css" name="style.css"/>
+        <h:outputStylesheet library="css" name="style.css" />
 
         <!-- Dynamic banner image based on locale -->
         <style>
             .header {
-                background:
-                    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-                    url("#{request.contextPath}/images/banner_#{facesContext.viewRoot.locale.language}.jpg") center/cover no-repeat !important;
+                background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                url("#{request.contextPath}/images/banner_#{facesContext.viewRoot.locale.language}.jpg") center/cover no-repeat !important;
                 background-color: #003366;
             }
         </style>
@@ -29,7 +25,15 @@
 
         <header class="header">
             <div style="display: flex; justify-content: space-between; align-items: center; position: relative;">
-                <div style="flex: 1;"></div>
+                <div style="flex: 1;">
+                    <!-- Language Switcher -->
+                    <h:form style="display: inline;">
+                        <h:commandButton value="#{msg['lang.polish']}" action="#{localeBean.switchToPolish()}"
+                            style="background: #{localeBean.polish ? '#ffeb3b' : 'transparent'}; border: 1px solid white; color: #{localeBean.polish ? '#333' : 'white'}; padding: 5px 10px; margin-right: 5px; cursor: pointer; border-radius: 3px; font-weight: #{localeBean.polish ? 'bold' : 'normal'};" />
+                        <h:commandButton value="#{msg['lang.english']}" action="#{localeBean.switchToEnglish()}"
+                            style="background: #{localeBean.english ? '#ffeb3b' : 'transparent'}; border: 1px solid white; color: #{localeBean.english ? '#333' : 'white'}; padding: 5px 10px; cursor: pointer; border-radius: 3px; font-weight: #{localeBean.english ? 'bold' : 'normal'};" />
+                    </h:form>
+                </div>
                 <div style="flex: 1; text-align: center;">
                     <h1 style="margin: 0;">#{msg['app.title']}</h1>
                     <p style="margin: 5px 0 0 0;">#{msg['app.tagline']}</p>
@@ -38,14 +42,15 @@
                     <h:panelGroup rendered="#{authBean.loggedIn}">
                         <p style="margin: 5px 0; font-size: 0.9em;">
                             #{msg['user.loggedAs']} <strong>#{authBean.username}</strong>
-                            <br/>
+                            <br />
                             <span style="font-size: 0.85em;">
                                 (#{authBean.admin ? msg['user.role.admin'] : msg['user.role.user']})
                             </span>
                         </p>
                         <h:form style="display: inline;">
-                            <h:commandButton value="#{msg['user.logout']}" actionListener="#{authBean.logout}" immediate="true"
-                                         style="background: none; border: none; color: #ffeb3b; text-decoration: underline; cursor: pointer; font-size: 0.9em; padding: 0;"/>
+                            <h:commandButton value="#{msg['user.logout']}" actionListener="#{authBean.logout}"
+                                immediate="true"
+                                style="background: none; border: none; color: #ffeb3b; text-decoration: underline; cursor: pointer; font-size: 0.9em; padding: 0;" />
                         </h:form>
                     </h:panelGroup>
                 </div>
@@ -53,14 +58,18 @@
         </header>
         <nav class="nav">
             <ul>
-                <li><h:link outcome="/pages/category/categories" value="#{msg['nav.categories']}"/></li>
+                <li>
+                    <h:link outcome="/pages/category/categories" value="#{msg['nav.categories']}" />
+                </li>
             </ul>
         </nav>
 
         <main class="content">
             <ui:insert name="content">
                 <article>
-                    <header><h2>#{msg['welcome.title']}</h2></header>
+                    <header>
+                        <h2>#{msg['welcome.title']}</h2>
+                    </header>
                     <section>
                         <p>#{msg['welcome.description']}</p>
                     </section>
@@ -75,4 +84,5 @@
 
     </h:body>
 </f:view>
+
 </html>
