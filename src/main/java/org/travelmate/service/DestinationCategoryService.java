@@ -2,6 +2,7 @@ package org.travelmate.service;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import org.travelmate.config.Logged;
 import org.travelmate.model.DestinationCategory;
 import org.travelmate.repository.DestinationCategoryRepository;
 
@@ -26,15 +27,18 @@ public class DestinationCategoryService {
         return repository.findAll();
     }
 
+    @Logged
     public void create(DestinationCategory entity) {
         repository.create(entity);
     }
 
+    @Logged
     public void delete(UUID categoryId) {
         tripService.deleteByCategoryId(categoryId);
         repository.delete(categoryId);
     }
 
+    @Logged
     public void update(DestinationCategory entity) {
         repository.update(entity);
     }

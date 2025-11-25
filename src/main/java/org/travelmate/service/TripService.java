@@ -2,6 +2,7 @@ package org.travelmate.service;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import org.travelmate.config.Logged;
 import org.travelmate.model.Trip;
 import org.travelmate.repository.TripRepository;
 
@@ -35,18 +36,22 @@ public class TripService {
         return tripRepository.findByUserId(userId);
     }
 
+    @Logged
     public void create(Trip entity) {
         tripRepository.create(entity);
     }
 
+    @Logged
     public void delete(UUID id) {
         tripRepository.delete(id);
     }
 
+    @Logged
     public void deleteByCategoryId(UUID categoryId) {
         findByCategoryId(categoryId).forEach(trip -> tripRepository.delete(trip.getId()));
     }
 
+    @Logged
     public void update(Trip entity) {
         tripRepository.update(entity);
     }

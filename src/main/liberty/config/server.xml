@@ -4,6 +4,8 @@
         <feature>appSecurity-5.0</feature>
     </featureManager>
 
+    <!-- Logging configuration - show INFO level logs in console -->
+    <logging consoleLogLevel="INFO" consoleFormat="simple" traceSpecification="org.travelmate.*=all"/>
 
     <keyStore id="defaultKeyStore" password="password" />
 
