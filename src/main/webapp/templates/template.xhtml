@@ -18,8 +18,28 @@
     <h:body>
 
         <header class="header">
-            <h1>TravelMate</h1>
-            <p>Your personal travel assistant</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+                <div style="flex: 1;"></div>
+                <div style="flex: 1; text-align: center;">
+                    <h1 style="margin: 0;">TravelMate</h1>
+                    <p style="margin: 5px 0 0 0;">Your personal travel assistant</p>
+                </div>
+                <div style="flex: 1; text-align: right; color: white;">
+                    <h:panelGroup rendered="#{authBean.loggedIn}">
+                        <p style="margin: 5px 0; font-size: 0.9em;">
+                            Logged in as: <strong>#{authBean.username}</strong>
+                            <br/>
+                            <span style="font-size: 0.85em;">
+                                (#{authBean.admin ? 'Administrator' : 'User'})
+                            </span>
+                        </p>
+                        <h:form style="display: inline;">
+                            <h:commandButton value="Logout" actionListener="#{authBean.logout}" immediate="true"
+                                         style="background: none; border: none; color: #ffeb3b; text-decoration: underline; cursor: pointer; font-size: 0.9em; padding: 0;"/>
+                        </h:form>
+                    </h:panelGroup>
+                </div>
+            </div>
         </header>
         <nav class="nav">
             <ul>

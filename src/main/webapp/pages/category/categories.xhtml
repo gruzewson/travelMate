@@ -47,7 +47,8 @@
 
                             <h:commandButton value="Delete (with trips)"
                                              action="#{categoryViewBean.deleteCategory(category.id)}"
-                                             onclick="return confirm('Are you sure you want to delete this category and all its trips?');" />
+                                             onclick="return confirm('Are you sure you want to delete this category and all its trips?');"
+                                             rendered="#{authBean.admin}" />
                         </h:column>
 
                     </h:dataTable>

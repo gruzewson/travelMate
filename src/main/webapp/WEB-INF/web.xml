@@ -21,4 +21,37 @@
     <welcome-file-list>
         <welcome-file>pages/category/categories.xhtml</welcome-file>
     </welcome-file-list>
+
+    <!-- Security Configuration -->
+    <!-- Protected application pages FIRST - more specific patterns first -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Protected Application</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>USER</role-name>
+            <role-name>ADMIN</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- Public resources - login page, CSS, images MUST BE AFTER protected to override -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Public Resources</web-resource-name>
+            <url-pattern>/login.xhtml</url-pattern>
+            <url-pattern>/resources/*</url-pattern>
+            <url-pattern>/images/*</url-pattern>
+            <url-pattern>/jakarta.faces.resource/*</url-pattern>
+        </web-resource-collection>
+        <!-- No auth-constraint means publicly accessible -->
+    </security-constraint>
+
+    <security-role>
+        <role-name>ADMIN</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>USER</role-name>
+    </security-role>
 </web-app>

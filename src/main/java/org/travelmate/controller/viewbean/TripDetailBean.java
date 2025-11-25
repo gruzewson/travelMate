@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.travelmate.model.DestinationCategory;
 import org.travelmate.model.Trip;
+import org.travelmate.model.User;
 import org.travelmate.service.TripService;
 
 import java.io.IOException;
@@ -21,6 +22,9 @@ public class TripDetailBean implements Serializable {
 
     @Inject
     private TripService tripService;
+
+    @Inject
+    private AuthBean authBean;
 
     @Getter
     private Trip trip;
@@ -42,6 +46,24 @@ public class TripDetailBean implements Serializable {
                     context.responseComplete();
                 } catch (IOException e) {
                     throw new RuntimeException("Failed to send 404 error", e);
+                }
+                return;
+            }
+
+            // Authorization check - only owner or admin can view
+            User currentUser = authBean.getCurrentUser();
+            boolean isOwner = trip.getUser() != null && currentUser != null &&
+                            trip.getUser().getId().equals(currentUser.getId());
+
+            if (!authBean.isAdmin() && !isOwner) {
+                FacesContext context = FacesContext.getCurrentInstance();
+                HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+                try {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                                     "You are not authorized to view this trip.");
+                    context.responseComplete();
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to send 403 error", e);
                 }
             }
         }

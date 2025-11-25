@@ -1,12 +1,19 @@
 package org.travelmate.config;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
+import jakarta.security.enterprise.authentication.mechanism.http.FormAuthenticationMechanismDefinition;
+import jakarta.security.enterprise.authentication.mechanism.http.LoginToContinue;
 import jakarta.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
 import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = "TravelMateRealm")
+@FormAuthenticationMechanismDefinition(
+    loginToContinue = @LoginToContinue(
+        loginPage = "/login.xhtml",
+        errorPage = "/login.xhtml?error=true",
+        useForwardToLogin = false
+    )
+)
 @DatabaseIdentityStoreDefinition(
     dataSourceLookup = "jdbc/TravelMateDS",
     callerQuery = "SELECT password FROM users WHERE login = ?",

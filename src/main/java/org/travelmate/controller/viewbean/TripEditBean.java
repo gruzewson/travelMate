@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.travelmate.model.DestinationCategory;
 import org.travelmate.model.Trip;
+import org.travelmate.model.User;
 import org.travelmate.model.enums.TripStatus;
 import org.travelmate.service.DestinationCategoryService;
 import org.travelmate.service.TripService;
@@ -29,6 +30,9 @@ public class TripEditBean implements Serializable {
 
     @Inject
     private DestinationCategoryService categoryService;
+
+    @Inject
+    private AuthBean authBean;
 
     @Setter
     @Getter
@@ -69,6 +73,24 @@ public class TripEditBean implements Serializable {
                 return;
             }
 
+            // Authorization check - only owner or admin can edit
+            User currentUser = authBean.getCurrentUser();
+            boolean isOwner = trip.getUser() != null && currentUser != null &&
+                            trip.getUser().getId().equals(currentUser.getId());
+
+            if (!authBean.isAdmin() && !isOwner) {
+                FacesContext context = FacesContext.getCurrentInstance();
+                HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+                try {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                                     "You are not authorized to edit this trip.");
+                    context.responseComplete();
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to send 403 error", e);
+                }
+                return;
+            }
+
             if (trip.getCategory() != null) {
                 categoryId = trip.getCategory().getId().toString();
             }
@@ -78,6 +100,8 @@ public class TripEditBean implements Serializable {
             trip = new Trip();
             trip.setId(UUID.randomUUID());
             trip.setStatus(TripStatus.PLANNED);
+            // Set current user as trip owner
+            trip.setUser(authBean.getCurrentUser());
         }
     }
 
@@ -97,6 +121,11 @@ public class TripEditBean implements Serializable {
                 UUID catId = UUID.fromString(categoryId);
                 // Find and set category
                 categoryService.find(catId).ifPresent(trip::setCategory);
+            }
+
+            // Ensure user is set (in case it was cleared somehow)
+            if (trip.getUser() == null) {
+                trip.setUser(authBean.getCurrentUser());
             }
 
             if (editMode) {

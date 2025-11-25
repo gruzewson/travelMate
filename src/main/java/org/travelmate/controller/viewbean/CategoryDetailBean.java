@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.travelmate.model.DestinationCategory;
 import org.travelmate.model.Trip;
+import org.travelmate.model.User;
 import org.travelmate.service.DestinationCategoryService;
 import org.travelmate.service.TripService;
 
@@ -26,6 +27,9 @@ public class CategoryDetailBean implements Serializable {
 
     @Inject
     private TripService tripService;
+
+    @Inject
+    private AuthBean authBean;
 
     @Getter
     @Setter
@@ -52,10 +56,24 @@ public class CategoryDetailBean implements Serializable {
                 return;
             }
 
-            trips = tripService.findAll().stream()
-                    .filter(trip -> trip.getCategory() != null &&
-                            trip.getCategory().getId().equals(categoryId))
-                    .toList();
+            // Filter trips based on user role
+            User currentUser = authBean.getCurrentUser();
+            if (authBean.isAdmin()) {
+                // Admin sees all trips in category
+                trips = tripService.findAll().stream()
+                        .filter(trip -> trip.getCategory() != null &&
+                                trip.getCategory().getId().equals(categoryId))
+                        .toList();
+            } else {
+                // Regular user sees only their own trips
+                trips = tripService.findAll().stream()
+                        .filter(trip -> trip.getCategory() != null &&
+                                trip.getCategory().getId().equals(categoryId) &&
+                                trip.getUser() != null &&
+                                currentUser != null &&
+                                trip.getUser().getId().equals(currentUser.getId()))
+                        .toList();
+            }
         }
     }
 }
