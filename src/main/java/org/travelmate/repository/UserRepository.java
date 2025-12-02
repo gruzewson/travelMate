@@ -3,6 +3,11 @@ package org.travelmate.repository;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.Root;
+import org.travelmate.model.Trip;
 import org.travelmate.model.User;
 import java.util.*;
 
@@ -18,18 +23,23 @@ public class UserRepository {
 
     public Optional<User> findByLogin(String login) {
         try {
-            User user = em.createQuery("SELECT u FROM User u WHERE u.login = :login", User.class)
-                    .setParameter("login", login)
-                    .getSingleResult();
-            return Optional.of(user);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<User> cq = cb.createQuery(User.class);
+            Root<User> user = cq.from(User.class);
+            cq.select(user).where(cb.equal(user.get("login"), login));
+            User result = em.createQuery(cq).getSingleResult();
+            return Optional.of(result);
         } catch (Exception e) {
             return Optional.empty();
         }
     }
 
     public List<User> findAll() {
-        return em.createQuery("SELECT u FROM User u", User.class)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        Root<User> user = cq.from(User.class);
+        cq.select(user);
+        return em.createQuery(cq).getResultList();
     }
 
     public void create(User entity) {
@@ -39,9 +49,13 @@ public class UserRepository {
     public void delete(UUID id) {
         User entity = em.find(User.class, id);
         if (entity != null) {
-            em.createQuery("UPDATE Trip t SET t.user = NULL WHERE t.user.id = :userId")
-                    .setParameter("userId", id)
-                    .executeUpdate();
+            // Update trips using Criteria API
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaUpdate<Trip> cu = cb.createCriteriaUpdate(Trip.class);
+            Root<Trip> trip = cu.from(Trip.class);
+            cu.set(trip.<User>get("user"), (User) null);
+            cu.where(cb.equal(trip.get("user").get("id"), id));
+            em.createQuery(cu).executeUpdate();
 
             em.remove(entity);
         }

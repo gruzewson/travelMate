@@ -46,6 +46,14 @@ public class TripEditBean implements Serializable {
     @Getter
     private UUID tripId;
 
+    @Getter
+    @Setter
+    private boolean optimisticLockError = false;
+
+    @Getter
+    @Setter
+    private Trip currentDbTrip;
+
     public void init() {
         Map<String, String> params = FacesContext.getCurrentInstance()
                 .getExternalContext().getRequestParameterMap();
@@ -107,14 +115,9 @@ public class TripEditBean implements Serializable {
 
     public String save() {
         try {
-            // Validate dates
-            if (trip.getStartDate() != null && trip.getEndDate() != null &&
-                    trip.getStartDate().isAfter(trip.getEndDate())) {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Start date cannot be later than end date", null));
-                return null;
-            }
+            // Reset optimistic lock error flag
+            optimisticLockError = false;
+            currentDbTrip = null;
 
             // Set category object
             if (categoryId != null && !categoryId.isEmpty()) {
@@ -139,6 +142,17 @@ public class TripEditBean implements Serializable {
             }
 
             return "/pages/category/category-view?faces-redirect=true&id=" + categoryId;
+        } catch (jakarta.persistence.OptimisticLockException e) {
+            // Handle optimistic lock exception
+            optimisticLockError = true;
+
+            // Fetch current version from database
+            currentDbTrip = tripService.find(trip.getId()).orElse(null);
+
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "The trip was modified by another user. Please review the current data below.", null));
+            return null;
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error while saving: " + e.getMessage(), null));

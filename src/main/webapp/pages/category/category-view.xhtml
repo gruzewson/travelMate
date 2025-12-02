@@ -51,6 +51,25 @@
                             </h:column>
 
                             <h:column>
+                                <f:facet name="header">#{msg['trip.version']}</f:facet>
+                                #{trip.version}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">#{msg['trip.createdAt']}</f:facet>
+                                <h:outputText value="#{trip.createdAt}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy HH:mm" type="localDateTime" />
+                                </h:outputText>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">#{msg['trip.updatedAt']}</f:facet>
+                                <h:outputText value="#{trip.updatedAt}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy HH:mm" type="localDateTime" />
+                                </h:outputText>
+                            </h:column>
+
+                            <h:column>
                                 <f:facet name="header">#{msg['trip.startDate']}</f:facet>
                                 <h:outputText value="#{trip.startDate}">
                                     <f:convertDateTime pattern="dd-MM-yyyy" type="localDate" />

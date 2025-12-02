@@ -23,6 +23,23 @@
                     <dt><strong>#{msg['category.id']}:</strong></dt>
                     <dd>#{tripDetailBean.trip.id}</dd>
 
+                    <dt><strong>#{msg['trip.version']}:</strong></dt>
+                    <dd>#{tripDetailBean.trip.version}</dd>
+
+                    <dt><strong>#{msg['trip.createdAt']}:</strong></dt>
+                    <dd>
+                        <h:outputText value="#{tripDetailBean.trip.createdAt}">
+                            <f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" type="localDateTime"/>
+                        </h:outputText>
+                    </dd>
+
+                    <dt><strong>#{msg['trip.updatedAt']}:</strong></dt>
+                    <dd>
+                        <h:outputText value="#{tripDetailBean.trip.updatedAt}">
+                            <f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" type="localDateTime"/>
+                        </h:outputText>
+                    </dd>
+
                     <dt><strong>#{msg['trip.titleLabel']}</strong></dt>
                     <dd>#{tripDetailBean.trip.title}</dd>
 

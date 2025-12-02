@@ -3,6 +3,9 @@ package org.travelmate.repository;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.travelmate.model.DestinationCategory;
 
 import java.util.*;
@@ -18,8 +21,11 @@ public class DestinationCategoryRepository {
     }
 
     public List<DestinationCategory> findAll() {
-        return em.createQuery("SELECT c FROM DestinationCategory c", DestinationCategory.class)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<DestinationCategory> cq = cb.createQuery(DestinationCategory.class);
+        Root<DestinationCategory> category = cq.from(DestinationCategory.class);
+        cq.select(category);
+        return em.createQuery(cq).getResultList();
     }
 
     public void create(DestinationCategory entity) {

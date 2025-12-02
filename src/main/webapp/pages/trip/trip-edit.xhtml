@@ -23,66 +23,102 @@
                 <h:form>
                     <h:messages globalOnly="true" styleClass="messages" />
 
+                    <!-- Hidden field for optimistic locking version -->
+                    <h:inputHidden value="#{tripEditBean.trip.version}" rendered="#{tripEditBean.editMode}" />
+
+                    <!-- Display optimistic lock conflict information if present -->
+                    <h:panelGroup rendered="#{tripEditBean.optimisticLockError}">
+                        <div style="background-color: #fff3cd; border: 1px solid #ffc107; padding: 15px; margin-bottom: 20px; border-radius: 6px;">
+                            <h3 style="color: #856404; margin-top: 0;">#{msg['trip.optimisticLock.error']}</h3>
+                            <p>#{msg['trip.optimisticLock.message']}</p>
+
+                            <h4 style="margin-top: 20px;">#{msg['trip.optimisticLock.currentData']}:</h4>
+                            <dl>
+                                <dt><strong>#{msg['trip.titleLabel']}</strong></dt>
+                                <dd>#{tripEditBean.currentDbTrip.title}</dd>
+                                <dt><strong>#{msg['trip.startDateLabel']}</strong></dt>
+                                <dd>
+                                    <h:outputText value="#{tripEditBean.currentDbTrip.startDate}">
+                                        <f:convertDateTime pattern="dd-MM-yyyy" type="localDate"/>
+                                    </h:outputText>
+                                </dd>
+                                <dt><strong>#{msg['trip.endDateLabel']}</strong></dt>
+                                <dd>
+                                    <h:outputText value="#{tripEditBean.currentDbTrip.endDate}">
+                                        <f:convertDateTime pattern="dd-MM-yyyy" type="localDate"/>
+                                    </h:outputText>
+                                </dd>
+                                <dt><strong>#{msg['trip.costLabel']}</strong></dt>
+                                <dd>
+                                    <h:outputText value="#{tripEditBean.currentDbTrip.estimatedCost}">
+                                        <f:convertNumber type="currency" currencySymbol="PLN " />
+                                    </h:outputText>
+                                </dd>
+                                <dt><strong>#{msg['trip.statusLabel']}</strong></dt>
+                                <dd>#{tripEditBean.currentDbTrip.status}</dd>
+                                <dt><strong>#{msg['trip.version']}:</strong></dt>
+                                <dd>#{tripEditBean.currentDbTrip.version}</dd>
+                            </dl>
+
+                            <h4 style="margin-top: 20px;">#{msg['trip.optimisticLock.yourData']}:</h4>
+                        </div>
+                    </h:panelGroup>
+
                     <div style="margin-bottom: 15px;">
                         <h:outputLabel for="title" value="#{msg['trip.titleLabel']}" style="display: block; font-weight: bold; margin-bottom: 5px;" />
-                        <h:inputText id="title" value="#{tripEditBean.trip.title}" required="true"
-                                     requiredMessage="#{msg['trip.titleRequired']}"
+                        <h:inputText id="title" value="#{tripEditBean.trip.title}"
                                      style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;" />
-                        <h:message for="title" styleClass="error" />
+                        <h:message for="title" styleClass="error" style="color: red; font-size: 12px; display: block; margin-top: 5px;" />
                     </div>
 
                     <div style="margin-bottom: 15px;">
                         <h:outputLabel for="startDate" value="#{msg['trip.startDateLabel']}" style="display: block; font-weight: bold; margin-bottom: 5px;" />
-                        <h:inputText id="startDate" value="#{tripEditBean.trip.startDate}" required="true"
-                                     requiredMessage="#{msg['trip.startDateRequired']}"
+                        <h:inputText id="startDate" value="#{tripEditBean.trip.startDate}"
                                      style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"
                                      type="date">
                             <f:convertDateTime pattern="yyyy-MM-dd" type="localDate"/>
                         </h:inputText>
-                        <h:message for="startDate" styleClass="error" />
+                        <h:message for="startDate" styleClass="error" style="color: red; font-size: 12px; display: block; margin-top: 5px;" />
                     </div>
 
                     <div style="margin-bottom: 15px;">
                         <h:outputLabel for="endDate" value="#{msg['trip.endDateLabel']}" style="display: block; font-weight: bold; margin-bottom: 5px;" />
-                        <h:inputText id="endDate" value="#{tripEditBean.trip.endDate}" required="true"
-                                     requiredMessage="#{msg['trip.endDateRequired']}"
+                        <h:inputText id="endDate" value="#{tripEditBean.trip.endDate}"
                                      style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"
                                      type="date">
                             <f:convertDateTime pattern="yyyy-MM-dd" type="localDate"/>
                         </h:inputText>
-                        <h:message for="endDate" styleClass="error" />
+                        <h:message for="endDate" styleClass="error" style="color: red; font-size: 12px; display: block; margin-top: 5px;" />
                     </div>
 
                     <div style="margin-bottom: 15px;">
                         <h:outputLabel for="cost" value="#{msg['trip.costLabel']}" style="display: block; font-weight: bold; margin-bottom: 5px;" />
-                        <h:inputText id="cost" value="#{tripEditBean.trip.estimatedCost}" required="true"
-                                     requiredMessage="#{msg['trip.costRequired']}"
+                        <h:inputText id="cost" value="#{tripEditBean.trip.estimatedCost}"
                                      style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
                             <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
                         </h:inputText>
-                        <h:message for="cost" styleClass="error" />
+                        <h:message for="cost" styleClass="error" style="color: red; font-size: 12px; display: block; margin-top: 5px;" />
                     </div>
 
                     <div style="margin-bottom: 15px;">
                         <h:outputLabel for="status" value="#{msg['trip.statusLabel']}" style="display: block; font-weight: bold; margin-bottom: 5px;" />
-                        <h:selectOneMenu id="status" value="#{tripEditBean.trip.status}" required="true"
+                        <h:selectOneMenu id="status" value="#{tripEditBean.trip.status}"
                                          style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
                             <f:selectItems value="#{tripEditBean.tripStatuses}" var="status"
                                            itemValue="#{status}" itemLabel="#{status}" />
                         </h:selectOneMenu>
-                        <h:message for="status" styleClass="error" />
+                        <h:message for="status" styleClass="error" style="color: red; font-size: 12px; display: block; margin-top: 5px;" />
                     </div>
 
                     <div style="margin-bottom: 20px;">
                         <h:outputLabel for="category" value="#{msg['trip.categoryLabel']}" style="display: block; font-weight: bold; margin-bottom: 5px;" />
-                        <h:selectOneMenu id="category" value="#{tripEditBean.categoryId}" required="true"
-                                         requiredMessage="#{msg['trip.categoryRequired']}"
+                        <h:selectOneMenu id="category" value="#{tripEditBean.categoryId}"
                                          style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
                             <f:selectItem itemValue="" itemLabel="#{msg['trip.categorySelect']}" noSelectionOption="true" />
                             <f:selectItems value="#{tripEditBean.allCategories}" var="cat"
                                            itemValue="#{cat.id}" itemLabel="#{cat.name}" />
                         </h:selectOneMenu>
-                        <h:message for="category" styleClass="error" />
+                        <h:message for="category" styleClass="error" style="color: red; font-size: 12px; display: block; margin-top: 5px;" />
                     </div>
 
                     <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee; display: flex; gap: 15px; align-items: center;">
