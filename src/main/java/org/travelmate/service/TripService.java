@@ -4,8 +4,10 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import org.travelmate.config.Logged;
 import org.travelmate.model.Trip;
+import org.travelmate.model.enums.TripStatus;
 import org.travelmate.repository.TripRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,6 +36,19 @@ public class TripService {
 
     public List<Trip> findByUserId(UUID userId) {
         return tripRepository.findByUserId(userId);
+    }
+
+    /**
+     * Find trips with dynamic filtering using Criteria API.
+     * All filters are optional and combined with AND operator.
+     */
+    public List<Trip> findByFilters(UUID categoryId, UUID userId, String title,
+                                     LocalDate startDateFrom, LocalDate startDateTo,
+                                     LocalDate endDateFrom, LocalDate endDateTo,
+                                     Double minCost, Double maxCost, TripStatus status) {
+        return tripRepository.findByFilters(categoryId, userId, title,
+                startDateFrom, startDateTo, endDateFrom, endDateTo,
+                minCost, maxCost, status);
     }
 
     @Logged

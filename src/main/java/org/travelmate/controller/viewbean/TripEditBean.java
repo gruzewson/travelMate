@@ -37,11 +37,14 @@ public class TripEditBean implements Serializable {
     @Setter
     @Getter
     private Trip trip;
+
     @Setter
     @Getter
     private String categoryId;
+
     @Getter
     private boolean editMode;
+
     @Setter
     @Getter
     private UUID tripId;
@@ -64,7 +67,6 @@ public class TripEditBean implements Serializable {
         }
 
         if (tripId != null) {
-            // Edit mode
             editMode = true;
             trip = tripService.find(tripId).orElse(null);
 
@@ -81,7 +83,6 @@ public class TripEditBean implements Serializable {
                 return;
             }
 
-            // Authorization check - only owner or admin can edit
             User currentUser = authBean.getCurrentUser();
             boolean isOwner = trip.getUser() != null && currentUser != null &&
                             trip.getUser().getId().equals(currentUser.getId());
@@ -103,30 +104,36 @@ public class TripEditBean implements Serializable {
                 categoryId = trip.getCategory().getId().toString();
             }
         } else {
-            // Add mode
             editMode = false;
             trip = new Trip();
-            trip.setId(UUID.randomUUID());
             trip.setStatus(TripStatus.PLANNED);
-            // Set current user as trip owner
             trip.setUser(authBean.getCurrentUser());
         }
     }
 
     public String save() {
         try {
-            // Reset optimistic lock error flag
             optimisticLockError = false;
             currentDbTrip = null;
 
-            // Set category object
+            // Manual Bean Validation - validate the entire Trip object including class-level constraints
+            jakarta.validation.Validator validator = jakarta.validation.Validation.buildDefaultValidatorFactory().getValidator();
+            java.util.Set<jakarta.validation.ConstraintViolation<Trip>> violations = validator.validate(trip);
+
+            if (!violations.isEmpty()) {
+                // Add validation errors to FacesContext
+                for (jakarta.validation.ConstraintViolation<Trip> violation : violations) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, violation.getMessage(), null));
+                }
+                return null; // Stay on the same page
+            }
+
             if (categoryId != null && !categoryId.isEmpty()) {
                 UUID catId = UUID.fromString(categoryId);
-                // Find and set category
                 categoryService.find(catId).ifPresent(trip::setCategory);
             }
 
-            // Ensure user is set (in case it was cleared somehow)
             if (trip.getUser() == null) {
                 trip.setUser(authBean.getCurrentUser());
             }
@@ -143,12 +150,8 @@ public class TripEditBean implements Serializable {
 
             return "/pages/category/category-view?faces-redirect=true&id=" + categoryId;
         } catch (jakarta.persistence.OptimisticLockException e) {
-            // Handle optimistic lock exception
             optimisticLockError = true;
-
-            // Fetch current version from database
             currentDbTrip = tripService.find(trip.getId()).orElse(null);
-
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                             "The trip was modified by another user. Please review the current data below.", null));
@@ -167,5 +170,5 @@ public class TripEditBean implements Serializable {
     public TripStatus[] getTripStatuses() {
         return TripStatus.values();
     }
-
 }
+

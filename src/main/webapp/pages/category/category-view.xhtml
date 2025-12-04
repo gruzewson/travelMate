@@ -37,8 +37,101 @@
                     </h:link>
                 </div>
 
-                <h:form id="tripForm">
+                <h:form id="filterForm">
+                    <!-- Filter Panel -->
+                    <fieldset style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 6px; background-color: #f9f9f9;">
+                        <legend style="font-weight: bold; padding: 0 10px;">#{msg['filter.title']}</legend>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+
+                            <!-- Title Filter -->
+                            <div>
+                                <h:outputLabel for="filterTitle" value="#{msg['trip.titleLabel']}:" style="display: block; margin-bottom: 5px; font-weight: bold;" />
+                                <h:inputText id="filterTitle" value="#{categoryDetailBean.filterTitle}"
+                                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+                            </div>
+
+                            <!-- Start Date From -->
+                            <div>
+                                <h:outputLabel for="filterStartDateFrom" value="#{msg['filter.startDateFrom']}:" style="display: block; margin-bottom: 5px; font-weight: bold;" />
+                                <h:inputText id="filterStartDateFrom" value="#{categoryDetailBean.filterStartDateFrom}"
+                                    type="date" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <f:convertDateTime pattern="yyyy-MM-dd" type="localDate"/>
+                                </h:inputText>
+                            </div>
+
+                            <!-- Start Date To -->
+                            <div>
+                                <h:outputLabel for="filterStartDateTo" value="#{msg['filter.startDateTo']}:" style="display: block; margin-bottom: 5px; font-weight: bold;" />
+                                <h:inputText id="filterStartDateTo" value="#{categoryDetailBean.filterStartDateTo}"
+                                    type="date" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <f:convertDateTime pattern="yyyy-MM-dd" type="localDate"/>
+                                </h:inputText>
+                            </div>
+
+                            <!-- End Date From -->
+                            <div>
+                                <h:outputLabel for="filterEndDateFrom" value="#{msg['filter.endDateFrom']}:" style="display: block; margin-bottom: 5px; font-weight: bold;" />
+                                <h:inputText id="filterEndDateFrom" value="#{categoryDetailBean.filterEndDateFrom}"
+                                    type="date" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <f:convertDateTime pattern="yyyy-MM-dd" type="localDate"/>
+                                </h:inputText>
+                            </div>
+
+                            <!-- End Date To -->
+                            <div>
+                                <h:outputLabel for="filterEndDateTo" value="#{msg['filter.endDateTo']}:" style="display: block; margin-bottom: 5px; font-weight: bold;" />
+                                <h:inputText id="filterEndDateTo" value="#{categoryDetailBean.filterEndDateTo}"
+                                    type="date" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <f:convertDateTime pattern="yyyy-MM-dd" type="localDate"/>
+                                </h:inputText>
+                            </div>
+
+                            <!-- Min Cost -->
+                            <div>
+                                <h:outputLabel for="filterMinCost" value="#{msg['filter.minCost']}:" style="display: block; margin-bottom: 5px; font-weight: bold;" />
+                                <h:inputText id="filterMinCost" value="#{categoryDetailBean.filterMinCost}"
+                                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <f:convertNumber type="number" />
+                                </h:inputText>
+                            </div>
+
+                            <!-- Max Cost -->
+                            <div>
+                                <h:outputLabel for="filterMaxCost" value="#{msg['filter.maxCost']}:" style="display: block; margin-bottom: 5px; font-weight: bold;" />
+                                <h:inputText id="filterMaxCost" value="#{categoryDetailBean.filterMaxCost}"
+                                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <f:convertNumber type="number" />
+                                </h:inputText>
+                            </div>
+
+                            <!-- Status Filter -->
+                            <div>
+                                <h:outputLabel for="filterStatus" value="#{msg['trip.statusLabel']}:" style="display: block; margin-bottom: 5px; font-weight: bold;" />
+                                <h:selectOneMenu id="filterStatus" value="#{categoryDetailBean.filterStatus}"
+                                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <f:selectItem itemLabel="#{msg['filter.allStatuses']}" noSelectionOption="true" />
+                                    <f:selectItems value="#{categoryDetailBean.tripStatuses}" var="status"
+                                        itemValue="#{status}" itemLabel="#{status}" />
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+
+                        <!-- Filter Buttons -->
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <h:commandButton value="#{msg['filter.apply']}" action="#{categoryDetailBean.applyFilters}"
+                                style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                <f:ajax execute="@form" render="tripTablePanel" />
+                            </h:commandButton>
+                            <h:commandButton value="#{msg['filter.clear']}" action="#{categoryDetailBean.clearFilters}"
+                                style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                <f:ajax execute="@form" render="tripTablePanel" />
+                            </h:commandButton>
+                        </div>
+                    </fieldset>
+
                     <h:messages id="messages" globalOnly="true" styleClass="messages" />
+
 
                     <h:panelGroup id="tripTablePanel">
                         <h:dataTable value="#{categoryDetailBean.trips}" var="trip" styleClass="table"
@@ -143,3 +236,4 @@
 </ui:composition>
 
 </html>
+

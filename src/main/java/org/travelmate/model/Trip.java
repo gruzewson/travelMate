@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.travelmate.model.enums.TripStatus;
-import org.travelmate.validation.ValidTripDates;
+import org.travelmate.validation.ValidDateRange;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -13,9 +15,9 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ValidDateRange
 @Entity
 @Table(name = "trip")
-@ValidTripDates
 public class Trip {
 
     @Id
@@ -32,39 +34,41 @@ public class Trip {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @NotBlank(message = "{trip.validation.title.notBlank}")
-    @Size(min = 3, max = 100, message = "{trip.validation.title.size}")
     @Column(nullable = false)
+    @NotBlank(message = "Trip title is required")
+    @Size(min = 3, max = 100, message = "Trip title must be between 3 and 100 characters")
     private String title;
 
-    @NotNull(message = "{trip.validation.startDate.notNull}")
-    @FutureOrPresent(message = "{trip.validation.startDate.futureOrPresent}")
     @Column(name = "start_date")
+    @NotNull(message = "Start date is required")
     private LocalDate startDate;
 
-    @NotNull(message = "{trip.validation.endDate.notNull}")
     @Column(name = "end_date")
+    @NotNull(message = "End date is required")
     private LocalDate endDate;
 
-    @Min(value = 0, message = "{trip.validation.cost.min}")
-    @Max(value = 1000000, message = "{trip.validation.cost.max}")
     @Column(name = "estimated_cost")
-    private double estimatedCost;
+    @NotNull
+    @DecimalMin("0.01")
+    @DecimalMax("1000000.00")
+    private BigDecimal estimatedCost;
 
-    @NotNull(message = "{trip.validation.status.notNull}")
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
+    @NotNull(message = "Trip status is required")
     private TripStatus status;
 
-    @NotNull(message = "{trip.validation.category.notNull}")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     @JsonbTransient
+    @ToString.Exclude
     private DestinationCategory category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonbTransient
+    @ToString.Exclude
     private User user;
 
     @PrePersist
@@ -77,12 +81,5 @@ public class Trip {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
-    public UUID getCategoryId() {
-        return category != null ? category.getId() : null;
-    }
-
-    public UUID getUserId() {
-        return user != null ? user.getId() : null;
-    }
 }
+

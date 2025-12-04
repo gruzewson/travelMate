@@ -14,10 +14,10 @@ import org.travelmate.service.DestinationCategoryService;
 import org.travelmate.service.TripService;
 import org.travelmate.service.UserService;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Component for initializing sample data and demonstrating service operations.
@@ -82,47 +82,46 @@ public class DataInitializer implements ServletContextListener {
         createTrip("Tatra Mountains - Winter Trekking",
                 LocalDate.of(2025, 12, 15),
                 LocalDate.of(2025, 12, 20),
-                1500.0, TripStatus.PLANNED, mountains, john);
+                BigDecimal.valueOf(1500.0), TripStatus.PLANNED, mountains, john);
 
         createTrip("Bieszczady - Mountain Meadows",
-                LocalDate.of(2025, 6, 10),
-                LocalDate.of(2025, 6, 17),
-                1200.0, TripStatus.PLANNED, mountains, andrew);
+                LocalDate.of(2026, 6, 10),
+                LocalDate.of(2026, 6, 17),
+                BigDecimal.valueOf(1200.0), TripStatus.PLANNED, mountains, andrew);
 
         createTrip("Maldives - Paradise Island",
                 LocalDate.of(2026, 1, 20),
                 LocalDate.of(2026, 2, 3),
-                8500.0, TripStatus.PLANNED, beach, john);
+                BigDecimal.valueOf(8500.0), TripStatus.PLANNED, beach, john);
 
         createTrip("Sopot - Baltic Sea Weekend",
-                LocalDate.of(2025, 7, 15),
-                LocalDate.of(2025, 7, 18),
-                600.0, TripStatus.PLANNED, beach, mariusz);
+                LocalDate.of(2026, 7, 15),
+                LocalDate.of(2026, 7, 18),
+                BigDecimal.valueOf(600.0), TripStatus.PLANNED, beach, mariusz);
 
         createTrip("Krakow - Capital of Culture",
-                LocalDate.of(2025, 11, 1),
-                LocalDate.of(2025, 11, 5),
-                800.0, TripStatus.PLANNED, cities, john);
+                LocalDate.of(2026, 11, 1),
+                LocalDate.of(2026, 11, 5),
+                BigDecimal.valueOf(800.0), TripStatus.PLANNED, cities, john);
 
         createTrip("Barcelona - Gaudi and Tapas",
-                LocalDate.of(2025, 9, 20),
-                LocalDate.of(2025, 9, 27),
-                3200.0, TripStatus.PLANNED, cities, andrew);
+                LocalDate.of(2026, 9, 20),
+                LocalDate.of(2026, 9, 27),
+                BigDecimal.valueOf(3200.0), TripStatus.PLANNED, cities, andrew);
 
         createTrip("Safari in Tanzania",
                 LocalDate.of(2026, 3, 10),
                 LocalDate.of(2026, 3, 24),
-                12000.0, TripStatus.PLANNED, adventure, marcin);
+                BigDecimal.valueOf(12000.0), TripStatus.PLANNED, adventure, marcin);
 
         createTrip("Diving in Egypt",
-                LocalDate.of(2025, 5, 5),
-                LocalDate.of(2025, 5, 12),
-                4500.0, TripStatus.COMPLETED, adventure, mariusz);
+                LocalDate.of(2026, 5, 5),
+                LocalDate.of(2026, 5, 12),
+                BigDecimal.valueOf(4500.0), TripStatus.PLANNED, adventure, mariusz);
     }
 
     private User createUser(String login, String plainPassword, UserRole role, LocalDate dateOfBirth) {
         User user = new User();
-        user.setId(UUID.randomUUID());
         user.setLogin(login);
         user.setPassword(passwordHash.generate(plainPassword.toCharArray()));
         user.setRole(role);
@@ -134,7 +133,6 @@ public class DataInitializer implements ServletContextListener {
 
     private DestinationCategory createCategory(String name, String description) {
         DestinationCategory category = new DestinationCategory();
-        category.setId(UUID.randomUUID());
         category.setName(name);
         category.setDescription(description);
         categoryService.create(category);
@@ -142,9 +140,8 @@ public class DataInitializer implements ServletContextListener {
     }
 
     private void createTrip(String title, LocalDate startDate, LocalDate endDate,
-                           double cost, TripStatus status, DestinationCategory category, User user) {
+                            BigDecimal cost, TripStatus status, DestinationCategory category, User user) {
         Trip trip = new Trip();
-        trip.setId(UUID.randomUUID());
         trip.setTitle(title);
         trip.setStartDate(startDate);
         trip.setEndDate(endDate);
@@ -160,4 +157,3 @@ public class DataInitializer implements ServletContextListener {
         // Cleanup code if needed
     }
 }
-

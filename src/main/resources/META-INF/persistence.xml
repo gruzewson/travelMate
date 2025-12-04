@@ -13,10 +13,13 @@
         <class>org.travelmate.model.User</class>
 
         <properties>
-            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+
+            <!-- Disable automatic Bean Validation by JPA - we validate in JSF layer -->
+            <property name="jakarta.persistence.validation.mode" value="NONE"/>
         </properties>
     </persistence-unit>
 

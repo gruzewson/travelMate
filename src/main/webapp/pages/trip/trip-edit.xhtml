@@ -21,7 +21,12 @@
 
             <section>
                 <h:form>
-                    <h:messages globalOnly="true" styleClass="messages" />
+                    <!-- Global messages for class-level validation errors -->
+                    <h:messages globalOnly="false"
+                                styleClass="error-messages"
+                                errorStyle="color: red; background-color: #ffeeee; padding: 10px; margin: 10px 0; border: 1px solid red; border-radius: 4px; display: block;"
+                                infoStyle="color: blue; background-color: #eef; padding: 10px; margin: 10px 0; border: 1px solid blue; border-radius: 4px; display: block;"
+                                layout="list" />
 
                     <!-- Hidden field for optimistic locking version -->
                     <h:inputHidden value="#{tripEditBean.trip.version}" rendered="#{tripEditBean.editMode}" />

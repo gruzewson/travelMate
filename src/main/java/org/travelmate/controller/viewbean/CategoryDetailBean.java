@@ -1,21 +1,22 @@
 package org.travelmate.controller.viewbean;
 
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.faces.context.FacesContext;
 import lombok.Getter;
 import lombok.Setter;
 import org.travelmate.model.DestinationCategory;
 import org.travelmate.model.Trip;
 import org.travelmate.model.User;
+import org.travelmate.model.enums.TripStatus;
 import org.travelmate.service.DestinationCategoryService;
 import org.travelmate.service.TripService;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,10 +36,37 @@ public class CategoryDetailBean implements Serializable {
     @Getter
     @Setter
     private UUID categoryId;
+
     @Getter
     private DestinationCategory category;
+
     @Getter
     private List<Trip> trips;
+
+    // Filter fields for dynamic filtering (Task 4)
+    @Getter @Setter
+    private String filterTitle;
+
+    @Getter @Setter
+    private LocalDate filterStartDateFrom;
+
+    @Getter @Setter
+    private LocalDate filterStartDateTo;
+
+    @Getter @Setter
+    private LocalDate filterEndDateFrom;
+
+    @Getter @Setter
+    private LocalDate filterEndDateTo;
+
+    @Getter @Setter
+    private Double filterMinCost;
+
+    @Getter @Setter
+    private Double filterMaxCost;
+
+    @Getter @Setter
+    private TripStatus filterStatus;
 
     public void init() {
         if (categoryId != null) {
@@ -57,49 +85,61 @@ public class CategoryDetailBean implements Serializable {
                 return;
             }
 
-            // Filter trips based on user role
-            User currentUser = authBean.getCurrentUser();
-            if (authBean.isAdmin()) {
-                // Admin sees all trips in category
-                trips = tripService.findAll().stream()
-                        .filter(trip -> trip.getCategory() != null &&
-                                trip.getCategory().getId().equals(categoryId))
-                        .toList();
-            } else {
-                // Regular user sees only their own trips
-                trips = tripService.findAll().stream()
-                        .filter(trip -> trip.getCategory() != null &&
-                                trip.getCategory().getId().equals(categoryId) &&
-                                trip.getUser() != null &&
-                                currentUser != null &&
-                                trip.getUser().getId().equals(currentUser.getId()))
-                        .toList();
-            }
+            loadTrips();
         }
     }
 
-    public void refreshTrips() {
-        if (categoryId != null) {
-            User currentUser = authBean.getCurrentUser();
-            if (authBean.isAdmin()) {
-                trips = tripService.findAll().stream()
-                        .filter(trip -> trip.getCategory() != null &&
-                                trip.getCategory().getId().equals(categoryId))
-                        .toList();
-            } else {
-                trips = tripService.findAll().stream()
-                        .filter(trip -> trip.getCategory() != null &&
-                                trip.getCategory().getId().equals(categoryId) &&
-                                trip.getUser() != null &&
-                                currentUser != null &&
-                                trip.getUser().getId().equals(currentUser.getId()))
-                        .toList();
-            }
+    /**
+     * Load trips using dynamic Criteria API filtering.
+     */
+    private void loadTrips() {
+        User currentUser = authBean.getCurrentUser();
+        UUID userId = null;
+
+        if (!authBean.isAdmin() && currentUser != null) {
+            userId = currentUser.getId();
         }
+
+        trips = tripService.findByFilters(
+                categoryId,
+                userId,
+                filterTitle,
+                filterStartDateFrom,
+                filterStartDateTo,
+                filterEndDateFrom,
+                filterEndDateTo,
+                filterMinCost,
+                filterMaxCost,
+                filterStatus
+        );
+    }
+
+    public void applyFilters() {
+        loadTrips();
+    }
+
+    public void clearFilters() {
+        filterTitle = null;
+        filterStartDateFrom = null;
+        filterStartDateTo = null;
+        filterEndDateFrom = null;
+        filterEndDateTo = null;
+        filterMinCost = null;
+        filterMaxCost = null;
+        filterStatus = null;
+        loadTrips();
+    }
+
+    public void refreshTrips() {
+        loadTrips();
     }
 
     public void deleteTrip(UUID tripId) {
         tripService.delete(tripId);
-        refreshTrips();
+        loadTrips();
+    }
+
+    public TripStatus[] getTripStatuses() {
+        return TripStatus.values();
     }
 }

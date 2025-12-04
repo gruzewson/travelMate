@@ -11,6 +11,5 @@ public class UserRegistrationRequestDTO {
     private String login;
     private String password;
     private LocalDate dateOfBirth;
-
 }
 

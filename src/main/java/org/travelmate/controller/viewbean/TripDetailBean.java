@@ -50,7 +50,6 @@ public class TripDetailBean implements Serializable {
                 return;
             }
 
-            // Authorization check - only owner or admin can view
             User currentUser = authBean.getCurrentUser();
             boolean isOwner = trip.getUser() != null && currentUser != null &&
                             trip.getUser().getId().equals(currentUser.getId());
@@ -76,3 +75,4 @@ public class TripDetailBean implements Serializable {
         return null;
     }
 }
+

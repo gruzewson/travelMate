@@ -17,7 +17,7 @@ public class ChatMessage implements Serializable {
 
     private UUID id;
     private String senderUsername;
-    private String recipientUsername; // null means broadcast to all
+    private String recipientUsername;
     private String content;
     private LocalDateTime timestamp;
 
@@ -34,8 +34,8 @@ public class ChatMessage implements Serializable {
     }
 
     public boolean isFor(String username) {
-        return isBroadcast() || 
-               senderUsername.equals(username) || 
+        return isBroadcast() ||
+               senderUsername.equals(username) ||
                recipientUsername.equals(username);
     }
 }
